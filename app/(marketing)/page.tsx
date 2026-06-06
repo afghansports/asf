@@ -11,6 +11,7 @@ import { NewsTeaser } from "@/components/feature/news-teaser";
 import { ScoresStrip } from "@/components/feature/scores-strip";
 import { getContentBatch } from "@/lib/cms/site-content";
 import { getFlags } from "@/lib/features/flags";
+import { tObject } from "@/lib/i18n/translate";
 
 /**
  * ASF homepage. Server Components fetch CMS values; the client-only
@@ -25,12 +26,14 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const c = await getContentBatch({
-    hero_title: "Afghan Sports Federation",
-    hero_subtitle: "Building community through sports excellence since 1998",
-    hero_cta_primary: "Join the Community",
-    hero_cta_secondary: "View our wall",
-  });
+  const c = await tObject(
+    await getContentBatch({
+      hero_title: "Afghan Sports Federation",
+      hero_subtitle: "Building community through sports excellence since 1998",
+      hero_cta_primary: "Join the Community",
+      hero_cta_secondary: "View our wall",
+    }),
+  );
 
   const f = await getFlags([
     "home.hero",

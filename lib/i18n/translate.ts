@@ -126,3 +126,16 @@ export async function translateText(text: string | null | undefined, locale: str
   const [out] = await translateMany([text], locale);
   return out;
 }
+
+/**
+ * Translate every string value of an object for the active locale (cached),
+ * returning a same-shaped object. Reads the cookie if `locale` is omitted.
+ * Convenient for server components: `const c = await tObject({ title, body })`.
+ */
+export async function tObject<T extends Record<string, string>>(obj: T, locale?: string): Promise<T> {
+  const loc = locale ?? (await getLocale());
+  if (!isTranslatable(loc)) return obj;
+  const keys = Object.keys(obj);
+  const tx = await translateMany(keys.map((k) => obj[k]), loc);
+  return Object.fromEntries(keys.map((k, i) => [k, tx[i] || obj[k]])) as T;
+}

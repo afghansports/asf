@@ -3,6 +3,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { SectionLabel } from "@/components/shared/section-label";
 import { createClient } from "@/lib/supabase/server";
 import { getContentBatch } from "@/lib/cms/site-content";
+import { tObject, translateMany, isTranslatable, getLocale } from "@/lib/i18n/translate";
 
 /**
  * /about/history. Vertical timeline read from the `history_timeline` table.
@@ -46,30 +47,57 @@ export default async function HistoryPage() {
     // keep fallback
   }
 
-  const stats = await getContentBatch({
-    stat_1_number: "26+",
-    stat_1_label: "Years",
-    stat_2_number: "28",
-    stat_2_label: "Afghan Cups",
-    stat_3_number: "5",
-    stat_3_label: "Sports",
-    stat_4_number: "1000+",
-    stat_4_label: "Members",
-  });
+  const locale = await getLocale();
+
+  // Translate timeline entries (title + description) for Dari/Pashto readers.
+  let viewTimeline = timeline;
+  if (isTranslatable(locale) && timeline.length) {
+    const n = timeline.length;
+    const tx = await translateMany(
+      [...timeline.map((e) => e.title ?? ""), ...timeline.map((e) => e.description ?? "")],
+      locale,
+    );
+    viewTimeline = timeline.map((e, i) => ({
+      ...e,
+      title: tx[i] || e.title,
+      description: tx[n + i] || e.description,
+    }));
+  }
+
+  const stats = await tObject(
+    await getContentBatch({
+      stat_1_number: "26+",
+      stat_1_label: "Years",
+      stat_2_number: "28",
+      stat_2_label: "Afghan Cups",
+      stat_3_number: "5",
+      stat_3_label: "Sports",
+      stat_4_number: "1000+",
+      stat_4_label: "Members",
+    }),
+    locale,
+  );
+
+  const t = await tObject(
+    {
+      eyebrow: "History",
+      title: "26 years of Afghan sports.",
+      subtitle:
+        "From a single pick-up tournament to a federation with thousands of members across the United States.",
+      timelineLabel: "Timeline",
+    },
+    locale,
+  );
 
   return (
     <>
-      <PageHero
-        eyebrow="History"
-        title="26 years of Afghan sports."
-        subtitle="From a single pick-up tournament to a federation with thousands of members across the United States."
-      />
+      <PageHero eyebrow={t.eyebrow} title={t.title} subtitle={t.subtitle} />
 
       <section className="w-full bg-asf-off">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 py-16">
-          <SectionLabel>Timeline</SectionLabel>
+          <SectionLabel>{t.timelineLabel}</SectionLabel>
           <ol className="mt-10 relative ps-6 sm:ps-8 border-s-2 border-asf-red/30 space-y-10">
-            {timeline.map((entry) => (
+            {viewTimeline.map((entry) => (
               <li key={entry.id} className="relative">
                 <span
                   className="absolute -left-[1.6rem] sm:-left-[2.1rem] top-1 inline-flex w-3 h-3 rounded-full bg-asf-red ring-4 ring-asf-off"

@@ -3,6 +3,7 @@ import { Trophy, Users, Globe } from "lucide-react";
 import { PageHero } from "@/components/shared/page-hero";
 import { SectionLabel } from "@/components/shared/section-label";
 import { getContentBatch } from "@/lib/cms/site-content";
+import { tObject } from "@/lib/i18n/translate";
 
 /**
  * /about/mission. CMS keys: about_mission, about_vision,
@@ -18,29 +19,37 @@ export const metadata: Metadata = {
 const GOAL_ICONS = [Users, Trophy, Globe];
 
 export default async function MissionPage() {
-  const c = await getContentBatch({
-    about_mission:
-      "We exist to give every Afghan in America a place to play, compete, and belong.",
-    about_vision:
-      "A national network of chapters, players, and supporters across the United States.",
-    about_goal_1: "10,000 active members by 2030 across the United States.",
-    about_goal_2: "Five regional chapters with full Afghan Cup qualifying pipelines.",
-    about_goal_3: "International friendly tournaments with Afghan diaspora federations worldwide.",
+  const c = await tObject(
+    await getContentBatch({
+      about_mission:
+        "We exist to give every Afghan in America a place to play, compete, and belong.",
+      about_vision:
+        "A national network of chapters, players, and supporters across the United States.",
+      about_goal_1: "10,000 active members by 2030 across the United States.",
+      about_goal_2: "Five regional chapters with full Afghan Cup qualifying pipelines.",
+      about_goal_3: "International friendly tournaments with Afghan diaspora federations worldwide.",
+    }),
+  );
+
+  const t = await tObject({
+    eyebrow: "Mission and Vision",
+    title: "Why ASF exists, and where we are headed.",
+    missionLabel: "Mission",
+    visionLabel: "Vision",
+    goalsLabel: "Long-term goals",
+    goalsHeading: "Three things we are building toward.",
   });
 
   const goals = [c.about_goal_1, c.about_goal_2, c.about_goal_3].filter(Boolean);
 
   return (
     <>
-      <PageHero
-        eyebrow="Mission and Vision"
-        title="Why ASF exists, and where we are headed."
-      />
+      <PageHero eyebrow={t.eyebrow} title={t.title} />
 
       {/* Mission */}
       <section className="w-full bg-asf-off">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 py-16">
-          <SectionLabel>Mission</SectionLabel>
+          <SectionLabel>{t.missionLabel}</SectionLabel>
           <p className="mt-6 text-asf-text/90 text-lg leading-relaxed whitespace-pre-line">
             {c.about_mission}
           </p>
@@ -50,7 +59,7 @@ export default async function MissionPage() {
       {/* Vision */}
       <section className="w-full bg-white border-y border-asf-border">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 py-16">
-          <SectionLabel>Vision</SectionLabel>
+          <SectionLabel>{t.visionLabel}</SectionLabel>
           <p className="mt-6 text-asf-text/90 text-lg leading-relaxed whitespace-pre-line">
             {c.about_vision}
           </p>
@@ -61,9 +70,9 @@ export default async function MissionPage() {
       <section className="w-full bg-asf-off">
         <div className="max-w-5xl mx-auto px-4 sm:px-8 py-16">
           <div className="mb-10">
-            <SectionLabel>Long-term goals</SectionLabel>
+            <SectionLabel>{t.goalsLabel}</SectionLabel>
             <h2 className="mt-4 font-display font-black text-3xl sm:text-4xl text-asf-text leading-tight">
-              Three things we are building toward.
+              {t.goalsHeading}
             </h2>
           </div>
           <ol className="space-y-6">
