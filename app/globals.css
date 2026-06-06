@@ -83,17 +83,20 @@
    The Latin brand faces (Playfair / Barlow / DM Sans) ship no Arabic glyphs,
    so these locales fell back to the OS Arabic font — visibly smaller and
    inconsistent across devices. Fix:
-     1. Redefine the three font vars → Vazirmatn, so every consumer (headings,
-        body, font-* utilities) reskins to a real Dari/Pashto face for free.
-     2. Lift the base size + loosen leading so the script optically matches the
+     1. Body + UI → Vazirmatn (best long-form Dari/Pashto readability).
+     2. Headings → a serif per locale, chosen from the side-by-side mockup:
+          Dari  → Amiri        (classical Naskh serif, echoes Playfair)
+          Pashto→ Markazi Text (contemporary editorial serif)
+     3. Lift the base size + loosen leading so the script optically matches the
         Latin set and diacritics get vertical room.
    Scoped to :lang() on <html>; the locale switcher reloads, so SSR re-stamps
-   lang/dir and these rules apply cleanly. Tune the two sizes below to taste.
-   (Left unlayered so they win over the @layer base body rule.)
+   lang/dir and these rules apply cleanly. (Unlayered, so they win over
+   the @layer base body/heading rules.)
    ============================================================ */
+
+/* Shared: Vazirmatn body/UI + the optical size lift. */
 html:lang(fa-AF),
 html:lang(ps) {
-  --font-display: var(--font-vazir), "Noto Sans Arabic", "Geeza Pro", Tahoma, sans-serif;
   --font-condensed: var(--font-vazir), "Noto Sans Arabic", "Geeza Pro", Tahoma, sans-serif;
   --font-body: var(--font-vazir), "Noto Sans Arabic", "Geeza Pro", Tahoma, sans-serif;
   font-size: 106.25%; /* 16 → 17px: scales the whole rem type scale (text-*, headings) */
@@ -103,6 +106,28 @@ html:lang(fa-AF) body,
 html:lang(ps) body {
   font-size: 1rem;    /* ~17px, up from the Latin 15px base — body copy felt smallest */
   line-height: 1.85;  /* Arabic ascenders + diacritics need more vertical room */
+}
+
+/* Per-locale heading face. Vazirmatn is kept in the stack as the Latin/missing-
+   glyph fallback so mixed runs (e.g. "ASF") and any uncovered letters stay sane. */
+html:lang(fa-AF) {
+  --font-display: var(--font-amiri), var(--font-vazir), "Noto Naskh Arabic", Georgia, serif;
+}
+html:lang(ps) {
+  --font-display: var(--font-markazi), var(--font-vazir), "Noto Naskh Arabic", Georgia, serif;
+}
+
+/* These serif faces only ship up to weight 700 (the brand headings ask for
+   font-black/900) and sit taller than the Latin set, so normalise the weight
+   and give them roomier leading than the Tailwind `leading-tight` default to
+   stop multi-line headings from clipping/overlapping. */
+html:lang(fa-AF) :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: 700;
+  line-height: 1.4;
+}
+html:lang(ps) :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 /* ============================================================

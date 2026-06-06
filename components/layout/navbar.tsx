@@ -64,7 +64,9 @@ export async function Navbar() {
           <NavLink href="/">Home</NavLink>
           {flags["module.wall"] ? <NavLink href="/feed">Wall</NavLink> : null}
           <AboutMenu />
-          <NavLink href="/about/team">Team</NavLink>
+          {/* "ASF Team" (not "Team") to disambiguate the leadership/staff page
+              from the sports "Teams" directory below. */}
+          <NavLink href="/about/team">ASF Team</NavLink>
           {flags["module.events"] ? <NavLink href="/events">Events</NavLink> : null}
           {flags["module.teams"] ? <NavLink href="/teams">Teams</NavLink> : null}
           {flags["module.reels"] ? <NavLink href="/reels">Reels</NavLink> : null}

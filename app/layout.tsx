@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { Playfair_Display, Barlow_Condensed, DM_Sans, Vazirmatn } from "next/font/google";
+import { Playfair_Display, Barlow_Condensed, DM_Sans, Vazirmatn, Amiri, Markazi_Text } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@/components/layout/analytics";
 import { PwaRegister } from "@/components/layout/pwa-register";
@@ -44,6 +44,25 @@ const vazirmatn = Vazirmatn({
   display: "swap",
 });
 
+/* Heading faces per RTL locale (chosen from the side-by-side mockup):
+   Dari (fa-AF) → Amiri, a classical Naskh serif that echoes Playfair.
+   Pashto (ps)  → Markazi Text, a contemporary editorial serif.
+   Body stays Vazirmatn in both. globals.css wires these to --font-display
+   under the matching :lang(). Both top out at weight 700 (no 900). */
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
+  display: "swap",
+});
+
+const markazi = Markazi_Text({
+  subsets: ["arabic"],
+  weight: ["500", "600", "700"],
+  variable: "--font-markazi",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: {
@@ -75,7 +94,7 @@ export default function RootLayout({
     <html
       lang={lang}
       dir={dir}
-      className={`${playfair.variable} ${barlow.variable} ${dmSans.variable} ${vazirmatn.variable}`}
+      className={`${playfair.variable} ${barlow.variable} ${dmSans.variable} ${vazirmatn.variable} ${amiri.variable} ${markazi.variable}`}
       suppressHydrationWarning
     >
       <body className="antialiased font-body bg-asf-off text-asf-text overflow-x-hidden">
