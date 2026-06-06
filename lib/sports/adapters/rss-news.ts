@@ -17,53 +17,99 @@ import { contentKey } from "../normalize";
 
 const AFG = /afghan/i;
 const WC = /world cup|fifa|wc ?2026/i;
+// Sport keywords in Pashto + Dari/Persian — used to pull sport items out of the
+// general Afghan-language news feeds (cricket, football, sport, volleyball,
+// taekwondo, match/game, olympics, champion, national team, boxing, wrestling,
+// cycling, basketball, goal, cup, athlete, player, Rashid Khan).
+const SPORT_KW =
+  /کرکټ|کرکت|فوټبال|فوتبال|سپورت|ورزش|والیبال|تکواندو|لوب|بازی|مسابق|المپیک|قهرمان|تیم ملی|بوکس|کشتی|پهلوان|بایسکل|دوچرخ|بسکتبال|گول|جام|ورزشکار|بازیکن|راشد خان/;
+// "Afghanistan" in Pashto/Dari — keeps the broad regional feeds (BBC
+// Pashto/Persian, which also cover Iran) on-topic.
+const AFG_NATIVE = /افغان/;
 
 type Tag = "afghanistan" | "wc2026";
+type Lang = "en" | "fa" | "ps";
 type Feed = {
   url: string;
   source: string;
   provider: string;
+  language: Lang;
   /** Decide which feed a parsed item belongs to, or null to drop it. */
-  classify: (text: string) => Tag | null;
+  classify: (it: ParsedItem) => Tag | null;
 };
 
-const gnews = (q: string) =>
-  `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=en-US&gl=US&ceid=US:en`;
+const both = (it: ParsedItem) => `${it.title} ${it.summary ?? ""}`;
 
 const FEEDS: Feed[] = [
-  // Image-rich publisher feeds ------------------------------------------------
+  // --- English Afghan sport (real article URLs) ------------------------------
+  {
+    url: "https://pajhwok.com/category/sports/feed/",
+    source: "Pajhwok Afghan News",
+    provider: "pajhwok-sport",
+    language: "en",
+    classify: () => "afghanistan",
+  },
+  {
+    url: "https://www.ariananews.af/category/sport/feed/",
+    source: "Ariana News",
+    provider: "ariana-sport",
+    language: "en",
+    classify: () => "afghanistan",
+  },
   {
     url: "https://www.espn.com/espn/rss/cricinfo/news",
     source: "ESPN Cricinfo",
     provider: "espn-cricinfo",
-    classify: (t) => (AFG.test(t) ? "afghanistan" : null),
+    language: "en",
+    classify: (it) => (AFG.test(both(it)) ? "afghanistan" : null),
   },
+  // --- World / World Cup 2026 (image-rich) -----------------------------------
   {
     url: "https://feeds.bbci.co.uk/sport/rss.xml",
     source: "BBC Sport",
     provider: "bbc-sport",
-    classify: (t) => (AFG.test(t) ? "afghanistan" : WC.test(t) ? "wc2026" : null),
+    language: "en",
+    classify: (it) => (AFG.test(both(it)) ? "afghanistan" : WC.test(both(it)) ? "wc2026" : null),
   },
   {
     url: "https://www.espn.com/espn/rss/soccer/news",
     source: "ESPN Soccer",
     provider: "espn-soccer",
-    classify: (t) => (AFG.test(t) ? "afghanistan" : WC.test(t) ? "wc2026" : null),
+    language: "en",
+    classify: (it) => (AFG.test(both(it)) ? "afghanistan" : WC.test(both(it)) ? "wc2026" : null),
   },
-  // Google News — breadth across every Afghan sport --------------------------
+  // --- Native Dari + Pashto Afghan sport -------------------------------------
+  // TOLOnews categorises by URL (…/sport-…), which is far more reliable than
+  // keyword-matching its general feed.
   {
-    url: gnews(
-      "Afghanistan (cricket OR football OR taekwondo OR wrestling OR athletics OR cycling OR boxing OR volleyball OR futsal) when:21d",
-    ),
-    source: "Google News",
-    provider: "google-afg",
-    classify: () => "afghanistan",
+    url: "https://tolonews.com/rss.xml",
+    source: "TOLOnews",
+    provider: "tolo-ps",
+    language: "ps",
+    classify: (it) => (/\/sport/i.test(it.link) ? "afghanistan" : null),
   },
   {
-    url: gnews('("FIFA World Cup 2026" OR "World Cup 2026") when:21d'),
-    source: "Google News",
-    provider: "google-wc",
-    classify: () => "wc2026",
+    url: "https://tolonews.com/fa/rss.xml",
+    source: "طلوع‌نیوز",
+    provider: "tolo-fa",
+    language: "fa",
+    classify: (it) => (/\/sport/i.test(it.link) ? "afghanistan" : null),
+  },
+  // BBC Pashto/Persian are broad regional feeds (also Iran/world) — require a
+  // sport keyword AND Afghanistan named in the headline itself.
+  {
+    url: "https://feeds.bbci.co.uk/pashto/rss.xml",
+    source: "BBC پښتو",
+    provider: "bbc-ps",
+    language: "ps",
+    classify: (it) => (SPORT_KW.test(both(it)) && AFG_NATIVE.test(it.title) ? "afghanistan" : null),
+  },
+  {
+    url: "https://feeds.bbci.co.uk/persian/rss.xml",
+    source: "BBC فارسی",
+    provider: "bbc-fa",
+    language: "fa",
+    classify: (it) => (SPORT_KW.test(both(it)) && AFG_NATIVE.test(it.title) ? "afghanistan" : null),
   },
 ];
 
@@ -102,7 +148,11 @@ function cleanText(raw: string | null, maxLen = 320): string | null {
  *  no value beyond the title. Drop a summary that merely restates the title. */
 function isRedundant(summary: string | null, title: string): boolean {
   if (!summary) return true;
-  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  // Keep Latin alphanumerics + Arabic-script (Pashto/Dari) letters; drop the rest.
+  const norm = (s: string) =>
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]+/g, "");
   const t = norm(title);
   const s = norm(summary);
   if (!s) return true;
@@ -179,7 +229,7 @@ async function fetchFeed(feed: Feed): Promise<NewsRow[]> {
     const xml = await res.text();
     const rows: NewsRow[] = [];
     for (const it of parseRss(xml)) {
-      const tag = feed.classify(`${it.title} ${it.summary ?? ""}`);
+      const tag = feed.classify(it);
       if (!tag) continue;
       rows.push({
         provider: feed.provider,
@@ -191,7 +241,7 @@ async function fetchFeed(feed: Feed): Promise<NewsRow[]> {
         image_url: it.imageUrl,
         source_name: feed.source,
         published_at: safeIso(it.pubDate),
-        language: "en",
+        language: feed.language,
         feed_tag: tag,
       });
     }

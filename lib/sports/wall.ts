@@ -55,6 +55,16 @@ function balance<T>(afg: T[], world: T[], cap: number): T[] {
   return out;
 }
 
+/** Interleave two lists 1:1 (a, b, a, b, …), appending the longer tail. */
+function mix<T>(a: T[], b: T[]): T[] {
+  const out: T[] = [];
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    if (i < a.length) out.push(a[i]);
+    if (i < b.length) out.push(b[i]);
+  }
+  return out;
+}
+
 export type ProjectReport = {
   ok: boolean;
   inserted?: number;
@@ -86,10 +96,10 @@ export async function projectToWall(): Promise<ProjectReport> {
 
     const { data: news } = await supabase
       .from("external_news")
-      .select("feed_tag, title, summary, url, image_url, source_name, published_at")
+      .select("feed_tag, title, summary, url, image_url, source_name, published_at, language")
       .not("feed_tag", "is", null)
       .order("published_at", { ascending: false })
-      .limit(120);
+      .limit(160);
 
     // Prefer the most complete posts: image + body first, then image, then body.
     const newsScore = (x: { image_url: string | null; summary: string | null }) =>
@@ -99,7 +109,14 @@ export async function projectToWall(): Promise<ProjectReport> {
 
     const fxAfg = (fixtures ?? []).filter((f) => f.feed_tag === "afghanistan").sort((a, b) => fxImg(a) - fxImg(b));
     const fxWorld = (fixtures ?? []).filter((f) => f.feed_tag === "wc2026").sort((a, b) => fxImg(a) - fxImg(b));
-    const newsAfg = (news ?? []).filter((n) => n.feed_tag === "afghanistan").sort((a, b) => newsScore(a) - newsScore(b));
+
+    // Afghanistan news: interleave native Dari/Pashto with English so the
+    // native-language items always make the cut (they carry no image, so a
+    // pure completeness sort would bury them).
+    const afgAll = (news ?? []).filter((n) => n.feed_tag === "afghanistan");
+    const afgEn = afgAll.filter((n) => n.language === "en").sort((a, b) => newsScore(a) - newsScore(b));
+    const afgNative = afgAll.filter((n) => n.language !== "en").sort((a, b) => newsScore(a) - newsScore(b));
+    const newsAfg = mix(afgNative, afgEn);
     const newsWorld = (news ?? []).filter((n) => n.feed_tag === "wc2026").sort((a, b) => newsScore(a) - newsScore(b));
 
     const chosenFixtures = balance(fxAfg, fxWorld, FIXTURES_PER_SIDE);
@@ -115,9 +132,12 @@ export async function projectToWall(): Promise<ProjectReport> {
         ? `${f.home_name} ${f.home_score ?? "?"}–${f.away_score ?? "?"} ${f.away_name}`
         : `${f.home_name} vs ${f.away_name}`;
       const bodyBits = [f.league, fmtDate(f.kickoff), f.venue].filter(Boolean);
-      // No internal detail page for a pro fixture — link to a match-specific
-      // search so "View" shows live info for THIS game, not a generic page.
-      const q = encodeURIComponent(`${f.home_name} vs ${f.away_name} ${f.league ?? ""} score`.trim());
+      // Link to the real match page on TheSportsDB; football-data fixtures have
+      // no public page, so those fall back to the internal scores hub.
+      const link =
+        f.provider === "thesportsdb"
+          ? `https://www.thesportsdb.com/event/${f.provider_id}`
+          : "/scores";
       byKey.set(dedupe_key, {
         actor_id: null,
         kind: "external_fixture",
@@ -126,7 +146,7 @@ export async function projectToWall(): Promise<ProjectReport> {
         title: `${isFinal ? "Result" : "Upcoming"}: ${score}`,
         body: bodyBits.length ? bodyBits.join(" · ") : null,
         image_url: f.home_logo_url ?? f.away_logo_url ?? null,
-        link: `https://www.google.com/search?q=${q}`,
+        link,
         dedupe_key,
       });
     }

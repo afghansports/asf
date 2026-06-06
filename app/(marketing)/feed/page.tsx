@@ -176,11 +176,11 @@ export default async function FeedPage({
 
                         {/* Title + body */}
                         <SmartLink href={p.link} className="block mt-2 group">
-                          <p className="font-display font-bold text-base text-asf-text group-hover:text-asf-red leading-snug">
+                          <p dir="auto" className="font-display font-bold text-base text-asf-text group-hover:text-asf-red leading-snug">
                             {p.title}
                           </p>
                           {p.body ? (
-                            <p className="mt-1 text-sm text-asf-text/80 line-clamp-3 leading-relaxed">
+                            <p dir="auto" className="mt-1 text-sm text-asf-text/80 line-clamp-3 leading-relaxed">
                               {p.body}
                             </p>
                           ) : null}
@@ -206,7 +206,11 @@ export default async function FeedPage({
                       href={p.link}
                       className="flex items-center justify-between gap-2 px-4 py-2 border-t border-asf-border bg-asf-off-2/40 text-xs font-condensed font-bold tracking-[0.18em] uppercase text-asf-red hover:bg-asf-off-2"
                     >
-                      <span>View {meta.label.toLowerCase()}</span>
+                      <span>
+                        {p.kind === "external_news" || p.kind === "external_fixture"
+                          ? "Read more"
+                          : `View ${meta.label.toLowerCase()}`}
+                      </span>
                       <ArrowRight className="w-3.5 h-3.5" aria-hidden />
                     </SmartLink>
                   </li>

@@ -19,12 +19,15 @@ const STOPWORDS = new Set([
  */
 export function contentKey(title: string): string {
   let t = title.toLowerCase();
-  // Google News appends " - <publisher>" — remove the last such segment.
+  // Drop a trailing " - <publisher>" segment.
   t = t.replace(/\s+[-–|]\s+[^-–|]+$/, "");
-  // Strip diacritics (Afغان etc. transliterations differ across feeds).
+  // Strip Latin combining diacritics (transliterations differ across feeds);
+  // Arabic-script letters (Pashto/Dari) are left intact.
   t = t.normalize("NFKD").replace(/[̀-ͯ]/g, "");
-  // Non-alphanumerics → spaces.
-  t = t.replace(/[^a-z0-9\s]/g, " ");
+  // Keep Latin alphanumerics + Arabic-script letters (so Pashto/Dari headlines
+  // yield a real key); everything else becomes a space. Explicit ranges avoid
+  // the \p{} unicode flag, which needs an ES6+ tsconfig target.
+  t = t.replace(/[^a-z0-9\s؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]/g, " ");
   const tokens = t.split(/\s+/).filter((w) => w.length > 1 && !STOPWORDS.has(w));
   return tokens.slice(0, 10).join("-");
 }
