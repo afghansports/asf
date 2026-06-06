@@ -21,6 +21,7 @@ export type FixtureRow = {
   away_score: number | null;
   venue: string | null;
   notes: string | null;
+  feed_tag: "afghanistan" | "wc2026" | null;   // which curated feed this row belongs to
   raw: Record<string, unknown>;
 };
 
@@ -42,6 +43,7 @@ export type StandingRow = {
   goals_against: number;
   goal_difference: number;
   points: number;
+  feed_tag: "afghanistan" | "wc2026" | null;
   raw: Record<string, unknown>;
 };
 
@@ -56,6 +58,7 @@ export type NewsRow = {
   source_name: string | null;
   published_at: string | null;
   language: string;
+  feed_tag: "afghanistan" | "wc2026" | null;
 };
 
 export type SyncResult =

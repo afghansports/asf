@@ -1,8 +1,10 @@
 /**
- * Football-Data.org adapter. Free tier: 10 calls/min, 12 competitions.
+ * Football-Data.org adapter — FIFA World Cup 2026 only (groups + standings).
  *
- * Requires an API key (free signup at https://www.football-data.org/client/register)
- * Set `FOOTBALL_DATA_KEY` in env. If unset, the adapter is a no-op.
+ * Free tier (10 calls/min) includes the "WC" competition. Requires an API key
+ * (free signup at https://www.football-data.org/client/register). Set
+ * `FOOTBALL_DATA_KEY` in env. If unset, the adapter is a no-op — TheSportsDB
+ * still provides World Cup fixtures, this just adds the group standings table.
  *
  * Docs: https://www.football-data.org/documentation/api
  */
@@ -14,12 +16,7 @@ const KEY = process.env.FOOTBALL_DATA_KEY ?? "";
 const BASE = "https://api.football-data.org/v4";
 
 const COMPETITIONS: { code: string; label: string }[] = [
-  { code: "PL",  label: "Premier League" },
-  { code: "PD",  label: "La Liga" },
-  { code: "BL1", label: "Bundesliga" },
-  { code: "SA",  label: "Serie A" },
-  { code: "FL1", label: "Ligue 1" },
-  { code: "CL",  label: "UEFA Champions League" },
+  { code: "WC", label: "FIFA World Cup" },
 ];
 
 type Match = {
@@ -99,6 +96,7 @@ export async function syncFootballData(): Promise<SyncResult> {
         away_score: m.score?.fullTime?.away ?? null,
         venue: m.venue,
         notes: null,
+        feed_tag: "wc2026",
         raw: m as unknown as Record<string, unknown>,
       }));
       const { error } = await supabase
@@ -131,6 +129,7 @@ export async function syncFootballData(): Promise<SyncResult> {
           goals_against: t.goalsAgainst,
           goal_difference: t.goalDifference,
           points: t.points,
+          feed_tag: "wc2026",
           raw: t as unknown as Record<string, unknown>,
         }));
         await supabase

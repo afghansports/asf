@@ -12,6 +12,8 @@ import {
   Sparkles,
   UserPlus,
   ArrowRight,
+  Globe,
+  Megaphone,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PageHero } from "@/components/shared/page-hero";
@@ -43,6 +45,9 @@ const KIND_META: Record<
   club_created:     { icon: Shield,        label: "New club",     tone: "bg-asf-gold text-asf-text" },
   achievement:      { icon: Sparkles,      label: "Achievement",  tone: "bg-asf-green text-white" },
   user_joined:      { icon: UserPlus,      label: "Joined",       tone: "bg-white text-asf-text border border-asf-border" },
+  external_fixture: { icon: Globe,         label: "Pro fixture",  tone: "bg-asf-navy text-white" },
+  external_news:    { icon: Newspaper,     label: "Sports news",  tone: "bg-asf-gold text-asf-text" },
+  announcement:     { icon: Megaphone,     label: "Announcement", tone: "bg-asf-red text-white" },
 };
 
 const FILTERS: { kind: string | null; label: string }[] = [
@@ -54,6 +59,8 @@ const FILTERS: { kind: string | null; label: string }[] = [
   { kind: "match_result",     label: "Results" },
   { kind: "tournament",       label: "Tournaments" },
   { kind: "team_created",     label: "Teams" },
+  { kind: "external_fixture", label: "Scores" },
+  { kind: "external_news",    label: "Sports news" },
 ];
 
 type Search = { kind?: string };
@@ -71,7 +78,9 @@ export default async function FeedPage({
   const supabase = await createClient();
   let query = supabase
     .from("wall_posts")
-    .select("id, actor_id, kind, target_type, target_id, title, body, image_url, link, created_at")
+    .select("id, actor_id, kind, target_type, target_id, title, body, image_url, link, is_hidden, is_pinned, created_at")
+    .eq("is_hidden", false)
+    .order("is_pinned", { ascending: false })
     .order("created_at", { ascending: false })
     .limit(80);
   if (activeKind) query = query.eq("kind", activeKind);
@@ -166,7 +175,7 @@ export default async function FeedPage({
                         </div>
 
                         {/* Title + body */}
-                        <Link href={p.link} className="block mt-2 group">
+                        <SmartLink href={p.link} className="block mt-2 group">
                           <p className="font-display font-bold text-base text-asf-text group-hover:text-asf-red leading-snug">
                             {p.title}
                           </p>
@@ -175,13 +184,13 @@ export default async function FeedPage({
                               {p.body}
                             </p>
                           ) : null}
-                        </Link>
+                        </SmartLink>
                       </div>
                     </div>
 
                     {/* Optional image */}
                     {p.image_url ? (
-                      <Link href={p.link} className="block">
+                      <SmartLink href={p.link} className="block">
                         <FixedImage
                           src={cdnUrl(p.image_url)}
                           alt=""
@@ -189,17 +198,17 @@ export default async function FeedPage({
                           height={675}
                           className="w-full max-h-96 object-cover border-t border-asf-border"
                         />
-                      </Link>
+                      </SmartLink>
                     ) : null}
 
                     {/* Footer: link to content */}
-                    <Link
+                    <SmartLink
                       href={p.link}
                       className="flex items-center justify-between gap-2 px-4 py-2 border-t border-asf-border bg-asf-off-2/40 text-xs font-condensed font-bold tracking-[0.18em] uppercase text-asf-red hover:bg-asf-off-2"
                     >
                       <span>View {meta.label.toLowerCase()}</span>
                       <ArrowRight className="w-3.5 h-3.5" aria-hidden />
-                    </Link>
+                    </SmartLink>
                   </li>
                 );
               })}
@@ -208,6 +217,31 @@ export default async function FeedPage({
         </div>
       </section>
     </>
+  );
+}
+
+/** Renders an anchor tag for absolute URLs (opens new tab) and Next Link for internal paths. */
+function SmartLink({
+  href,
+  className,
+  children,
+}: {
+  href: string | null | undefined;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const dest = href || "#";
+  if (dest.startsWith("http")) {
+    return (
+      <a href={dest} target="_blank" rel="noopener noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={dest} className={className}>
+      {children}
+    </Link>
   );
 }
 
