@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@/components/layout/analytics";
 import { PwaRegister } from "@/components/layout/pwa-register";
 import { ThemeProvider } from "@/components/layout/theme-provider";
+import { AutoTranslate } from "@/components/i18n/auto-translate";
 import { SUPPORTED_LOCALES } from "@/lib/i18n/messages";
 import "./globals.css";
 
@@ -71,6 +72,7 @@ export default function RootLayout({
           <Toaster richColors position="top-right" />
           <Analytics />
           <PwaRegister />
+          <AutoTranslate />
         </ThemeProvider>
       </body>
     </html>
