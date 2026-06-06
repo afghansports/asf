@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1A1D21" />
+      <stop offset="1" stop-color="#0D0D0F" />
+    </linearGradient>
+    <pattern id="lines" width="36" height="36" patternUnits="userSpaceOnUse" patternTransform="rotate(135)">
+      <rect width="36" height="36" fill="transparent" />
+      <line x1="0" y1="0" x2="0" y2="36" stroke="#ffffff" stroke-width="1" stroke-opacity="0.05" />
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect width="1200" height="630" fill="url(#lines)" />
+  <circle cx="600" cy="240" r="84" fill="#1A1D21" stroke="#ffffff" stroke-width="3" />
+  <text x="600" y="260" text-anchor="middle" font-family="Arial Black, Helvetica, sans-serif" font-size="44" font-weight="900" fill="#ffffff" letter-spacing="6">ASF</text>
+  <text x="600" y="400" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="56" font-weight="900" fill="#ffffff">Afghan Sports Federation</text>
+  <text x="600" y="455" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="600" fill="#8E949E" letter-spacing="6">EST. 1998 . NORTHERN VIRGINIA</text>
+  <text x="600" y="510" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#ffffffcc">Building community through sports excellence since 1998.</text>
+  <rect x="0" y="610" width="1200" height="20" fill="#FF0000" />
+</svg>

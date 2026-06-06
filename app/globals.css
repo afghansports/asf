@@ -2,22 +2,162 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   ASF Brand tokens — Palette 01 "MODERN ELITE"
+   Ferrari Red · Jet Black · Charcoal · Steel Gray · Platinum · White
+   ============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary action — Ferrari Red (softened 4% — pure #FF0000 is too harsh
+     for large fills; this still reads as Ferrari at a glance) */
+  --asf-red: #F00C0C;
+  --asf-red-dark: #C20000;
+  --asf-red-light: #FFE8E8;
+
+  /* Dark surface — Charcoal (replaces navy across the system).
+     Keeping the `asf-navy*` variable names so the entire codebase
+     just inherits the new value with zero churn. */
+  --asf-navy: #1A1D21;        /* Charcoal — main dark surface */
+  --asf-navy-light: #2A2D32;  /* Lighter charcoal — hover state */
+  --asf-navy-pale: #F2F2F2;   /* Platinum echo for soft contrast blocks */
+
+  /* Deepest black — used for hero gradients + overlay scrims */
+  --asf-black: #0D0D0F;
+
+  /* Steel Gray — re-purposed for what was previously "gold". Used for
+     warning / pending / tertiary status pills. Far more neutral than gold. */
+  --asf-gold: #8E949E;
+  --asf-gold-light: #F2F2F2;
+
+  /* Success — kept slightly green for semantic clarity (no green in the
+     brand palette, but a status badge must read "go" without ambiguity) */
+  --asf-green: #00A85E;
+  --asf-green-light: #E6FAEF;
+
+  /* Neutrals */
+  --asf-white: #FFFFFF;
+  --asf-off: #F2F2F2;       /* Platinum — page background */
+  --asf-off-2: #E5E7E9;     /* Slightly darker for nested cards */
+
+  --asf-text: #1A1D21;      /* Charcoal — primary text */
+  --asf-muted: #6B6F75;     /* Lifted from Steel Gray — passes WCAG AA (4.56:1) */
+  --asf-muted-soft: #8E949E;/* Original Steel Gray for non-text decoration */
+  --asf-border: #E5E7E9;
+
+  /* Motion tokens */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --motion-slow: 300ms;
+  --motion-ease: cubic-bezier(0.16, 1, 0.3, 1);  /* ease-out-quint */
+
+  /* Font families (next/font injects --font-playfair, --font-barlow, --font-dm-sans) */
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-condensed: var(--font-barlow), "Helvetica Neue", Arial, sans-serif;
+  --font-body: var(--font-dm-sans), "Helvetica Neue", Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
+/* ============================================================
+   shadcn primitives (Tailwind v3 - HSL channel format)
+   ============================================================ */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+    --background: 0 0% 100%;
+    --foreground: 240 10% 14%;
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 14%;
+
+    /* Primary = Ferrari Red softened to #F00C0C */
+    --primary: 0 87% 49%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Foreground = Charcoal #1A1D21 */
+    --foreground: 220 7% 12%;
+    --card-foreground: 220 7% 12%;
+    --popover-foreground: 220 7% 12%;
+
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 220 7% 12%;
+
+    --muted: 0 0% 95%;
+    --muted-foreground: 220 4% 44%; /* Lifted muted — WCAG AA pass */
+
+    --accent: 0 0% 95%;
+    --accent-foreground: 220 7% 12%;
+
+    --destructive: 0 87% 49%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 5% 91%;
+    --input: 220 5% 91%;
+    --ring: 0 87% 49%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 8%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 4 75% 50%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 4 75% 50%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: var(--font-body);
+    background: var(--asf-off);
+    color: var(--asf-text);
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: var(--asf-off);
+    color: var(--asf-text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    /* Color intentionally NOT set here — inherits from parent so dark sections
+       (navy hero, navbar, team header) automatically get white text via
+       parent's `text-white`. If you need a dark heading on a light bg, the
+       body color cascades. Set an explicit text-* class when overriding. */
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 @layer utilities {

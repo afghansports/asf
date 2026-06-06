@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /onboarding
+Disallow: /profile/edit
+Disallow: /teams/create
+Disallow: /teams/manage
+Disallow: /events/create
+
+Sitemap: https://afghansportsfederation.com/sitemap.xml
