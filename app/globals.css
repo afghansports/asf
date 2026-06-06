@@ -79,6 +79,33 @@
 }
 
 /* ============================================================
+   Arabic-script locales — Dari (fa-AF) + Pashto (ps)
+   The Latin brand faces (Playfair / Barlow / DM Sans) ship no Arabic glyphs,
+   so these locales fell back to the OS Arabic font — visibly smaller and
+   inconsistent across devices. Fix:
+     1. Redefine the three font vars → Vazirmatn, so every consumer (headings,
+        body, font-* utilities) reskins to a real Dari/Pashto face for free.
+     2. Lift the base size + loosen leading so the script optically matches the
+        Latin set and diacritics get vertical room.
+   Scoped to :lang() on <html>; the locale switcher reloads, so SSR re-stamps
+   lang/dir and these rules apply cleanly. Tune the two sizes below to taste.
+   (Left unlayered so they win over the @layer base body rule.)
+   ============================================================ */
+html:lang(fa-AF),
+html:lang(ps) {
+  --font-display: var(--font-vazir), "Noto Sans Arabic", "Geeza Pro", Tahoma, sans-serif;
+  --font-condensed: var(--font-vazir), "Noto Sans Arabic", "Geeza Pro", Tahoma, sans-serif;
+  --font-body: var(--font-vazir), "Noto Sans Arabic", "Geeza Pro", Tahoma, sans-serif;
+  font-size: 106.25%; /* 16 → 17px: scales the whole rem type scale (text-*, headings) */
+}
+
+html:lang(fa-AF) body,
+html:lang(ps) body {
+  font-size: 1rem;    /* ~17px, up from the Latin 15px base — body copy felt smallest */
+  line-height: 1.85;  /* Arabic ascenders + diacritics need more vertical room */
+}
+
+/* ============================================================
    shadcn primitives (Tailwind v3 - HSL channel format)
    ============================================================ */
 @layer base {

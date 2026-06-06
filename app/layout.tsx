@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { Playfair_Display, Barlow_Condensed, DM_Sans } from "next/font/google";
+import { Playfair_Display, Barlow_Condensed, DM_Sans, Vazirmatn } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@/components/layout/analytics";
 import { PwaRegister } from "@/components/layout/pwa-register";
@@ -29,6 +29,18 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-dm-sans",
+  display: "swap",
+});
+
+/* Dari (fa-AF) + Pashto (ps). The three Latin faces above carry no Arabic
+   glyphs, so RTL locales were dropping to the OS Arabic font — which renders
+   smaller and varies per device. Vazirmatn is a proper Dari/Pashto face with a
+   large x-height (covers Persian + Pashto letters) and ships Latin too, so
+   mixed runs like "ASF" stay consistent. globals.css swaps it in for :lang(). */
+const vazirmatn = Vazirmatn({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-vazir",
   display: "swap",
 });
 
@@ -63,7 +75,7 @@ export default function RootLayout({
     <html
       lang={lang}
       dir={dir}
-      className={`${playfair.variable} ${barlow.variable} ${dmSans.variable}`}
+      className={`${playfair.variable} ${barlow.variable} ${dmSans.variable} ${vazirmatn.variable}`}
       suppressHydrationWarning
     >
       <body className="antialiased font-body bg-asf-off text-asf-text overflow-x-hidden">
