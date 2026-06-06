@@ -2,6 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { createHash } from "node:crypto";
 import { createServiceClient } from "@/lib/supabase/server";
+import { glossaryOverride } from "./glossary";
 
 /**
  * Server-side AI translation for user/admin content via Azure Translator
@@ -74,12 +75,21 @@ export async function translateMany(texts: (string | null | undefined)[], locale
   const cleaned = texts.map((t) => (typeof t === "string" ? t : ""));
   const code = AZURE_CODE[locale];
   if (!code) return cleaned;
+
+  // Manual glossary wins over BOTH the cache and Azure (terms Azure gets wrong,
+  // e.g. "President" → رئیس, not the head-of-state رئیس جمهور). Aligned 1:1 with
+  // `cleaned`; null = no override, so it falls through to the normal pipeline.
+  const overrides = cleaned.map((t) => glossaryOverride(t, locale));
+
   if (!cleaned.some((t) => t.trim())) return cleaned;
 
   try {
     const sb = createServiceClient();
     const hashes = cleaned.map((t) => (t.trim() ? sha(t) : ""));
-    const uniqueHashes = Array.from(new Set(hashes.filter(Boolean)));
+    // Overridden strings skip the cache + Azure entirely.
+    const uniqueHashes = Array.from(
+      new Set(hashes.filter((h, i) => h && overrides[i] == null)),
+    );
 
     const { data: cached } = await sb
       .from("content_translations")
@@ -90,10 +100,10 @@ export async function translateMany(texts: (string | null | undefined)[], locale
       (cached ?? []).map((r) => [r.source_hash as string, r.translated_text as string]),
     );
 
-    // Unique source texts still needing translation.
+    // Unique source texts still needing translation (overrides excluded).
     const missByHash = new Map<string, string>();
     cleaned.forEach((t, i) => {
-      if (t.trim() && !map.has(hashes[i])) missByHash.set(hashes[i], t);
+      if (t.trim() && overrides[i] == null && !map.has(hashes[i])) missByHash.set(hashes[i], t);
     });
 
     if (missByHash.size) {
@@ -113,10 +123,11 @@ export async function translateMany(texts: (string | null | undefined)[], locale
       }
     }
 
-    return cleaned.map((t, i) => (t.trim() ? map.get(hashes[i]) ?? t : t));
+    return cleaned.map((t, i) => overrides[i] ?? (t.trim() ? map.get(hashes[i]) ?? t : t));
   } catch (e) {
     console.error("[i18n/translate] falling back to source:", (e as Error).message);
-    return cleaned;
+    // Still honor manual overrides even when Azure/cache is unavailable.
+    return cleaned.map((t, i) => overrides[i] ?? cleaned[i]);
   }
 }
 
@@ -138,4 +149,44 @@ export async function tObject<T extends Record<string, string>>(obj: T, locale?:
   const keys = Object.keys(obj);
   const tx = await translateMany(keys.map((k) => obj[k]), loc);
   return Object.fromEntries(keys.map((k, i) => [k, tx[i] || obj[k]])) as T;
+}
+
+/**
+ * Cache-only lookup: existing translations (manual overrides or previously
+ * cached auto) for the given source texts, keyed by source text. Never calls
+ * Azure — used to pre-fill the admin translation editor so opening a form
+ * doesn't trigger (and pay for) fresh machine translation of everything.
+ */
+export async function getCachedTranslations(
+  texts: string[],
+  locale: string,
+): Promise<Record<string, string>> {
+  if (!isTranslatable(locale) || texts.length === 0) return {};
+  try {
+    const sb = createServiceClient();
+    const bySrc = new Map<string, string>();
+    for (const t of texts) if (t && t.trim()) bySrc.set(sha(t), t);
+    const hashes = Array.from(bySrc.keys());
+    if (hashes.length === 0) return {};
+    const { data } = await sb
+      .from("content_translations")
+      .select("source_hash, translated_text")
+      .eq("target_locale", locale)
+      .in("source_hash", hashes);
+    const out: Record<string, string> = {};
+    for (const row of data ?? []) {
+      const src = bySrc.get(row.source_hash as string);
+      if (src) out[src] = row.translated_text as string;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+/** Stable hash for a source string — same scheme as the translation cache.
+ *  Exposed so admin save actions write overrides to the same keys the public
+ *  translate-on-read looks up. */
+export function translationKey(text: string): string {
+  return sha(text);
 }

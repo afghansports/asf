@@ -1,5 +1,5 @@
 import { CmsEditor, type CmsField } from "@/components/admin/cms-editor";
-import { readAllContent } from "../_helpers";
+import { readAllContent, readFieldTranslations } from "../_helpers";
 
 export const metadata = { title: "Admin: Contact" };
 
@@ -15,6 +15,7 @@ const FIELDS: CmsField[] = [
 
 export default async function ContactCmsPage() {
   const initial = await readAllContent();
+  const translations = await readFieldTranslations(FIELDS.map((f) => f.key), initial);
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-8 py-10">
       <CmsEditor
@@ -22,6 +23,7 @@ export default async function ContactCmsPage() {
         description="Address, email, phone, and social links shown in the footer and on /contact."
         fields={FIELDS}
         initial={initial}
+        translations={translations}
       />
     </div>
   );

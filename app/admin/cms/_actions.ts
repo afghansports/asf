@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { translationKey } from "@/lib/i18n/translate";
 
 /**
  * CMS server actions. Updates `site_content` rows. Defence in depth: re-checks
@@ -53,6 +54,58 @@ export async function saveContent(
   // Bust caches for everywhere that reads CMS content.
   revalidatePath("/", "layout");
   return { ok: true, saved: rows.length };
+}
+
+/**
+ * Save admin-entered Dari/Pashto for content fields. Stores each as a manual
+ * translation override in `content_translations`, keyed by a hash of the English
+ * source — the same key the public translate-on-read looks up, so overrides take
+ * effect immediately and replace the machine translation. A blank value deletes
+ * the override (reverts that field to auto-translation).
+ */
+export async function saveContentTranslations(
+  locale: string,
+  items: { sourceText: string; value: string }[],
+): Promise<CmsResult> {
+  const ctx = await requireAdmin();
+  if (!ctx.ok) return ctx;
+  if (locale !== "fa-AF" && locale !== "ps") return { ok: false, message: "Unsupported language." };
+
+  const upserts: {
+    source_hash: string;
+    target_locale: string;
+    source_text: string;
+    translated_text: string;
+  }[] = [];
+  const deletes: string[] = [];
+  for (const it of items) {
+    const src = (it.sourceText ?? "").trim();
+    if (!src) continue;
+    const hash = translationKey(src);
+    const value = (it.value ?? "").trim();
+    if (value) {
+      upserts.push({ source_hash: hash, target_locale: locale, source_text: src, translated_text: value });
+    } else {
+      deletes.push(hash);
+    }
+  }
+
+  if (upserts.length) {
+    const { error } = await ctx.supabase
+      .from("content_translations")
+      .upsert(upserts, { onConflict: "source_hash,target_locale" });
+    if (error) return { ok: false, message: error.message };
+  }
+  if (deletes.length) {
+    await ctx.supabase
+      .from("content_translations")
+      .delete()
+      .eq("target_locale", locale)
+      .in("source_hash", deletes);
+  }
+
+  revalidatePath("/", "layout");
+  return { ok: true, saved: upserts.length };
 }
 
 export async function saveSettings(

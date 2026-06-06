@@ -1,5 +1,5 @@
 import { CmsEditor, type CmsField } from "@/components/admin/cms-editor";
-import { readAllContent } from "../_helpers";
+import { readAllContent, readFieldTranslations } from "../_helpers";
 
 export const metadata = { title: "Admin: About" };
 
@@ -23,6 +23,7 @@ const FIELDS: CmsField[] = [
 
 export default async function AboutCmsPage() {
   const initial = await readAllContent();
+  const translations = await readFieldTranslations(FIELDS.map((f) => f.key), initial);
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-8 py-10">
       <CmsEditor
@@ -30,6 +31,7 @@ export default async function AboutCmsPage() {
         description="Story, mission, vision, four values, and three long-term goals."
         fields={FIELDS}
         initial={initial}
+        translations={translations}
       />
     </div>
   );

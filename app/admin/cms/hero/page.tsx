@@ -1,5 +1,5 @@
 import { CmsEditor, type CmsField } from "@/components/admin/cms-editor";
-import { readAllContent } from "../_helpers";
+import { readAllContent, readFieldTranslations } from "../_helpers";
 
 export const metadata = { title: "Admin: Hero" };
 
@@ -12,6 +12,7 @@ const FIELDS: CmsField[] = [
 
 export default async function HeroCmsPage() {
   const initial = await readAllContent();
+  const translations = await readFieldTranslations(FIELDS.map((f) => f.key), initial);
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-8 py-10">
       <CmsEditor
@@ -19,6 +20,7 @@ export default async function HeroCmsPage() {
         description="The video carousel at the top of the homepage."
         fields={FIELDS}
         initial={initial}
+        translations={translations}
       />
     </div>
   );
