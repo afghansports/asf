@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,9 +22,11 @@ export function ReplyForm({ discussionId }: { discussionId: string }) {
       const r = await postDiscussionReply(discussionId, body.trim());
       if (!r.ok) {
         setErr(r.message);
+        toast.error(r.message);
         return;
       }
       setBody("");
+      toast.success("Reply posted");
       router.refresh();
     });
   }

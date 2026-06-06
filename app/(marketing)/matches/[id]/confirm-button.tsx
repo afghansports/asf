@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 import { confirmMatch, disputeMatch } from "../actions";
@@ -14,9 +15,11 @@ export function ConfirmMatchButton({ matchId }: { matchId: string }) {
       const r = kind === "confirm" ? await confirmMatch(matchId) : await disputeMatch(matchId);
       if (r.ok) {
         setMsg({ kind: "ok", m: kind === "confirm" ? "Confirmed." : "Marked as disputed. ASF admin will review." });
+        toast.success(kind === "confirm" ? "Result confirmed" : "Result disputed");
         window.setTimeout(() => window.location.reload(), 1000);
       } else {
         setMsg({ kind: "err", m: r.message });
+        toast.error(r.message);
       }
     });
   }

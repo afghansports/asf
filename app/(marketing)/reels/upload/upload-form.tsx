@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Upload, Video, Loader2, X, CheckCircle2, Link as LinkIcon, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -141,6 +142,7 @@ export function UploadForm({ userId }: { userId: string }) {
           setPostErr(result.message);
           return;
         }
+        toast.success("Reel posted");
         setDone(true);
         window.setTimeout(() => router.push("/reels"), 1200);
       });
@@ -159,6 +161,7 @@ export function UploadForm({ userId }: { userId: string }) {
         // if the env vars aren't set). Fall back to direct Supabase Storage.
         try {
           await uploadToMux(pendingFile);
+          toast.success("Reel posted");
           setDone(true);
           window.setTimeout(() => router.push("/reels"), 1500);
           return;
@@ -184,11 +187,14 @@ export function UploadForm({ userId }: { userId: string }) {
           durationSeconds: duration,
         });
         if (!result.ok) throw new Error(result.message);
+        toast.success("Reel posted");
         setDone(true);
         window.setTimeout(() => router.push("/reels"), 1200);
       } catch (err) {
         console.error("[reels/upload]", err);
-        setPostErr(err instanceof Error ? err.message : "Upload failed. Try again.");
+        const message = err instanceof Error ? err.message : "Upload failed. Try again.";
+        setPostErr(message);
+        toast.error(message);
       } finally {
         setUploading(false);
       }

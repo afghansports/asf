@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,8 +36,13 @@ export function NewPollForm() {
     setErr(null);
     start(async () => {
       const r = await createPoll({ question, options, closesInDays: days });
-      if (r.ok && r.id) router.push(`/polls/${r.id}`);
-      else if (!r.ok) setErr(r.message);
+      if (r.ok && r.id) {
+        toast.success("Poll created");
+        router.push(`/polls/${r.id}`);
+      } else if (!r.ok) {
+        toast.error(r.message);
+        setErr(r.message);
+      }
     });
   }
 

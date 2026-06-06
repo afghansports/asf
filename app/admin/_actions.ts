@@ -22,7 +22,7 @@ async function requireAdmin() {
     .eq("id", user.id)
     .maybeSingle();
   if (!profile?.is_admin) return { ok: false as const, message: "Admin access required." };
-  return { ok: true as const, supabase: createServiceClient() };
+  return { ok: true as const, supabase: createServiceClient(), userId: user.id };
 }
 
 /* -------------------------------- EVENTS -------------------------------- */
@@ -210,6 +210,74 @@ export async function toggleUserActive(profileId: string, value: boolean): Promi
   const { error } = await ctx.supabase.from("profiles").update({ is_active: value }).eq("id", profileId);
   if (error) return { ok: false, message: error.message };
   revalidatePath("/admin/users");
+  return { ok: true };
+}
+
+/* ------------------------------ RECOVERY -------------------------------- */
+
+export async function approveRecoveryRequest(
+  requestId: string,
+  matchedUserId: string
+): Promise<AdminResult> {
+  const ctx = await requireAdmin();
+  if (!ctx.ok) return ctx;
+
+  const { data: req, error: loadErr } = await ctx.supabase
+    .from("account_recovery_requests")
+    .select("id, new_email, status")
+    .eq("id", requestId)
+    .maybeSingle();
+  if (loadErr) return { ok: false, message: loadErr.message };
+  if (!req) return { ok: false, message: "Request not found." };
+  if (req.status !== "pending") return { ok: false, message: "This request has already been handled." };
+
+  // Move the account to the email the user now controls.
+  const { error: updErr } = await ctx.supabase.auth.admin.updateUserById(matchedUserId, {
+    email: req.new_email as string,
+    email_confirm: true,
+  });
+  if (updErr) return { ok: false, message: `Could not update email: ${updErr.message}` };
+
+  // Best-effort: send a password reset so they can set a new password. Requires
+  // email delivery (RESEND) to be configured for the link to actually arrive.
+  try {
+    await ctx.supabase.auth.resetPasswordForEmail(req.new_email as string, {
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/reset-password`,
+    });
+  } catch {
+    /* non-fatal: the user can use forgot-password once email is configured */
+  }
+
+  const { error: markErr } = await ctx.supabase
+    .from("account_recovery_requests")
+    .update({
+      status: "approved",
+      matched_user_id: matchedUserId,
+      reviewed_by: ctx.userId,
+      reviewed_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+  if (markErr) return { ok: false, message: markErr.message };
+
+  revalidatePath("/admin/recovery");
+  return { ok: true };
+}
+
+export async function denyRecoveryRequest(requestId: string, notes: string): Promise<AdminResult> {
+  const ctx = await requireAdmin();
+  if (!ctx.ok) return ctx;
+  const { error } = await ctx.supabase
+    .from("account_recovery_requests")
+    .update({
+      status: "denied",
+      review_notes: notes || null,
+      reviewed_by: ctx.userId,
+      reviewed_at: new Date().toISOString(),
+    })
+    .eq("id", requestId)
+    .eq("status", "pending");
+  if (error) return { ok: false, message: error.message };
+  revalidatePath("/admin/recovery");
   return { ok: true };
 }
 

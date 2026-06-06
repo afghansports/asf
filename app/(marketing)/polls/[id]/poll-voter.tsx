@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { Check } from "lucide-react";
 import { Alert } from "@/components/ui/alert";
 import { votePoll } from "../actions";
@@ -57,6 +58,9 @@ export function PollVoter({
           counts: { ...s.counts, [optionId]: Math.max(0, (s.counts[optionId] ?? 0) - 1) },
           total: Math.max(0, s.total - 1),
         }));
+        toast.error(r.message);
+      } else {
+        toast.success("Vote recorded");
       }
     });
   }

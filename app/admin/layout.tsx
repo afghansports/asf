@@ -29,6 +29,7 @@ import {
   Network,
   Globe,
   BookOpen,
+  KeyRound,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Logo } from "@/components/shared/logo";
@@ -65,6 +66,7 @@ const PLATFORM_NAV: NavItem[] = [
   { href: "/admin/reports",    icon: Flag,     label: "Reports" },
   { href: "/admin/moderation", icon: Gavel,    label: "Moderation" },
   { href: "/admin/appeals",    icon: Scale,    label: "Appeals" },
+  { href: "/admin/recovery",   icon: KeyRound, label: "Recovery" },
   { href: "/admin/contacts",   icon: Mail,     label: "Contacts" },
   { href: "/admin/newsletter", icon: Send,     label: "Newsletter" },
   { href: "/admin/geo",        icon: MapPin,   label: "Geo districts" },

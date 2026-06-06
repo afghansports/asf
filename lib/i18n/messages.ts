@@ -1,7 +1,7 @@
 /**
- * i18n scaffolding. Keeps copy strings keyed for future translation. Phase 1
- * ships English only; Dari (`fa-AF`) and Pashto (`ps`) bundles can be added
- * to the LOCALES record without code changes elsewhere.
+ * i18n scaffolding. Keeps copy strings keyed for translation. English is the
+ * source bundle; Dari (`fa-AF`) and Pashto (`ps`) provide translations and fall
+ * back to English for any key they omit.
  *
  * To use: import { t, useLocale } from "@/lib/i18n/messages"; <p>{t("home.cta")}</p>
  *
@@ -34,11 +34,58 @@ const en = {
   "feed.upload": "Upload reel",
 } as const;
 
-// Stub bundles — empty objects fall through to English keys.
-const faAF: Partial<typeof en> = {};
-const ps: Partial<typeof en> = {};
+type MessageKey = keyof typeof en;
+type Bundle = Partial<Record<MessageKey, string>>;
 
-const LOCALES: Record<Locale, Partial<typeof en>> = {
+// Dari (Afghan Persian, fa-AF) — RTL.
+const faAF: Bundle = {
+  "nav.home": "خانه",
+  "nav.events": "رویدادها",
+  "nav.teams": "تیم‌ها",
+  "nav.tournaments": "مسابقات",
+  "nav.reels": "ریل‌ها",
+  "nav.polls": "نظرسنجی‌ها",
+  "nav.gallery": "گالری",
+  "nav.news": "اخبار",
+  "nav.login": "ورود",
+  "nav.signup": "عضویت",
+  "common.save": "ذخیره",
+  "common.cancel": "لغو",
+  "common.confirm": "تأیید",
+  "common.delete": "حذف",
+  "common.search": "جستجو",
+  "common.signOut": "خروج",
+  "auth.minAge": "برای استفاده از ASF باید حداقل ۱۳ سال سن داشته باشید.",
+  "auth.parentalConsent": "کاربران زیر ۱۶ سال برای کسب رضایت به ایمیل والدین یا سرپرست نیاز دارند.",
+  "feed.empty": "هنوز هیچ ریلی وجود ندارد.",
+  "feed.upload": "بارگذاری ریل",
+};
+
+// Pashto (ps) — RTL.
+const ps: Bundle = {
+  "nav.home": "کور",
+  "nav.events": "پېښې",
+  "nav.teams": "ټیمونه",
+  "nav.tournaments": "سیالۍ",
+  "nav.reels": "ریلونه",
+  "nav.polls": "نظرپوښتنې",
+  "nav.gallery": "ګالري",
+  "nav.news": "خبرونه",
+  "nav.login": "ننوتل",
+  "nav.signup": "غړیتوب",
+  "common.save": "خوندي کول",
+  "common.cancel": "لغوه کول",
+  "common.confirm": "تایید",
+  "common.delete": "ړنګول",
+  "common.search": "لټون",
+  "common.signOut": "وتل",
+  "auth.minAge": "د ASF کارولو لپاره باید لږ تر لږه ۱۳ کلن اوسئ.",
+  "auth.parentalConsent": "د ۱۶ کلونو نه کم عمره کاروونکي د رضایت لپاره د مور و پلار یا سرپرست بریښنالیک ته اړتیا لري.",
+  "feed.empty": "تر اوسه هیڅ ریل نشته.",
+  "feed.upload": "ریل پورته کول",
+};
+
+const LOCALES: Record<Locale, Bundle> = {
   en,
   "fa-AF": faAF,
   ps,
@@ -58,10 +105,9 @@ export function isRtl(l: Locale = activeLocale): boolean {
   return l === "fa-AF" || l === "ps";
 }
 
-export function t(key: keyof typeof en): string {
+export function t(key: MessageKey): string {
   const bundle = LOCALES[activeLocale];
-  const fromBundle = (bundle as Partial<typeof en>)[key];
-  return (fromBundle as string | undefined) ?? (en as Record<string, string>)[key] ?? key;
+  return bundle[key] ?? en[key] ?? key;
 }
 
 export const SUPPORTED_LOCALES: { code: Locale; label: string; nativeLabel: string; rtl: boolean }[] = [

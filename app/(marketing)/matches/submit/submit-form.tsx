@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,8 +62,10 @@ export function SubmitForm({ myTeams, otherTeams }: { myTeams: T[]; otherTeams: 
         notes,
       });
       if (r.ok && r.id) {
+        toast.success("Result submitted");
         router.push(`/matches/${r.id}`);
       } else if (!r.ok) {
+        toast.error(r.message);
         setErr(r.message);
       }
     });

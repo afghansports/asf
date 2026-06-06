@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toggleBookmark, type BookmarkTarget } from "@/lib/bookmarks/actions";
@@ -30,7 +31,12 @@ export function BookmarkButton({
     setSaved(next);
     start(async () => {
       const r = await toggleBookmark({ targetType, targetId });
-      if (!r.ok) setSaved(!next);
+      if (!r.ok) {
+        setSaved(!next);
+        toast.error("Could not update saved items");
+      } else {
+        toast.success(next ? "Saved" : "Removed");
+      }
     });
   }
 

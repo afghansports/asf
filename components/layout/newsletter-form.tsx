@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,8 +30,10 @@ export function NewsletterForm({ variant = "footer" }: { variant?: "footer" | "s
       if (result.ok) {
         setStatus({ kind: "ok", message: result.message });
         setEmail("");
+        toast.success("Subscribed to the newsletter");
       } else {
         setStatus({ kind: "err", message: result.message });
+        toast.error(result.message);
       }
     });
   }

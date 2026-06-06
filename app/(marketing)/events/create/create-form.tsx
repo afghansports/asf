@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,8 +68,10 @@ export function CreateEventForm({ userId, captainTeams }: { userId: string; capt
         registrationLink: regLink,
         organizerTeamId: orgTeam || null,
       });
-      if (result.ok) setDone(true);
-      else setErr(result.message);
+      if (result.ok) {
+        toast.success("Event submitted for review");
+        setDone(true);
+      } else setErr(result.message);
     });
   }
 

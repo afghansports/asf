@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toggleHashtagFollow } from "@/lib/hashtags/actions";
@@ -23,7 +24,12 @@ export function HashtagFollowButton({
     setFollowing(next);
     start(async () => {
       const r = await toggleHashtagFollow(tag);
-      if (!r.ok) setFollowing(!next);
+      if (!r.ok) {
+        setFollowing(!next);
+        toast.error("Could not update hashtag");
+      } else {
+        toast.success(next ? "Following hashtag" : "Unfollowed hashtag");
+      }
     });
   }
 

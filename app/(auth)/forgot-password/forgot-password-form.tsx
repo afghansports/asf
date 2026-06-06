@@ -95,6 +95,12 @@ export function ForgotPasswordForm() {
           Back to sign in
         </Link>
       </p>
+      <p className="text-center text-xs text-asf-muted">
+        Lost access to your email?{" "}
+        <Link href="/recover-account" className="text-asf-red hover:text-asf-red-dark font-medium">
+          Recover your account
+        </Link>
+      </p>
     </form>
   );
 }

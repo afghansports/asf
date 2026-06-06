@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { UserCheck, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,8 +46,10 @@ export function EntityFollowButton({
       if (!r.ok) {
         setFollowing(!next);
         setErr(r.message);
+        toast.error(r.message);
       } else {
         setFollowing(r.following);
+        toast.success(r.following ? "Following" : "Unfollowed");
       }
     });
   }

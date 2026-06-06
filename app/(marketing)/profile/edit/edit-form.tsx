@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
+import { toast } from "sonner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -151,6 +152,8 @@ function BasicInfoTab({ initial }: { initial: ProfileEditInitial }) {
         avatarUrl,
       });
       applyStatus(result, setStatus);
+      if (result.ok) toast.success("Profile updated");
+      else toast.error(result.message);
     });
   }
 
@@ -299,6 +302,8 @@ function PlayerTab({ initial }: { initial: ProfileEditInitial }) {
         isFreeAgent: free,
       });
       applyStatus(result, setStatus);
+      if (result.ok) toast.success("Player settings saved");
+      else toast.error(result.message);
     });
   }
 
@@ -384,6 +389,8 @@ function ChangeEmailForm({ currentEmail }: { currentEmail: string }) {
     startTransition(async () => {
       const result = await saveAccountEmail(email);
       applyStatus(result, setStatus);
+      if (result.ok) toast.success("Confirmation sent to your new email");
+      else toast.error(result.message);
     });
   }
 
@@ -435,6 +442,9 @@ function ChangePasswordForm() {
         setCurrent("");
         setNext("");
         setConfirm("");
+        toast.success("Password changed");
+      } else {
+        toast.error(result.message);
       }
     });
   }
