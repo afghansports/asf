@@ -6,6 +6,7 @@ import { NewsCard, type NewsCardData } from "@/components/shared/news-card";
 import { EmptyState } from "@/components/shared/empty-state";
 import { isFeatureEnabled } from "@/lib/features/flags";
 import { ModuleDisabled } from "@/components/shared/module-disabled";
+import { getLocale, translateMany, isTranslatable } from "@/lib/i18n/translate";
 
 export const metadata: Metadata = {
   title: "News",
@@ -36,6 +37,18 @@ export default async function NewsListPage({
   const total = count ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
+  // Auto-translate the visible cards for Dari/Pashto readers (cached; en passes through).
+  const locale = await getLocale();
+  let view = posts;
+  if (isTranslatable(locale) && posts.length) {
+    const n = posts.length;
+    const t = await translateMany(
+      [...posts.map((p) => p.title ?? ""), ...posts.map((p) => p.excerpt ?? "")],
+      locale,
+    );
+    view = posts.map((p, i) => ({ ...p, title: t[i] || p.title, excerpt: t[n + i] || p.excerpt }));
+  }
+
   return (
     <>
       <PageHero
@@ -54,7 +67,7 @@ export default async function NewsListPage({
           ) : (
             <>
               <ul className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                {posts.map((p) => (
+                {view.map((p) => (
                   <li key={p.id}>
                     <NewsCard post={p} />
                   </li>

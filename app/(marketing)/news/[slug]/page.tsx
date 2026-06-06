@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PageHero } from "@/components/shared/page-hero";
 import { ShareButtons } from "@/components/shared/share-buttons";
 import { NewsCard, type NewsCardData } from "@/components/shared/news-card";
+import { getLocale, translateMany, isTranslatable } from "@/lib/i18n/translate";
 
 type Props = { params: { slug: string } };
 
@@ -49,6 +50,23 @@ export default async function NewsArticlePage({ params }: Props) {
     .limit(3);
   const related = (relatedRows ?? []) as NewsCardData[];
 
+  // Auto-translate the visible article + related cards for Dari/Pashto readers.
+  const locale = await getLocale();
+  let title = post.title;
+  let content = post.content;
+  let relatedView = related;
+  if (isTranslatable(locale)) {
+    [title, content] = await translateMany([post.title ?? "", post.content ?? ""], locale);
+    if (related.length) {
+      const n = related.length;
+      const t = await translateMany(
+        [...related.map((r) => r.title ?? ""), ...related.map((r) => r.excerpt ?? "")],
+        locale,
+      );
+      relatedView = related.map((r, i) => ({ ...r, title: t[i] || r.title, excerpt: t[n + i] || r.excerpt }));
+    }
+  }
+
   const dateStr = post.published_at
     ? new Date(post.published_at).toLocaleString("en-US", {
         month: "long",
@@ -61,7 +79,7 @@ export default async function NewsArticlePage({ params }: Props) {
 
   return (
     <>
-      <PageHero eyebrow="News" title={post.title} />
+      <PageHero eyebrow="News" title={title} />
       <section className="w-full bg-asf-off">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 py-10">
           <div className="flex flex-wrap items-center gap-3 text-sm text-asf-muted mb-6">
@@ -82,8 +100,8 @@ export default async function NewsArticlePage({ params }: Props) {
             </div>
           ) : null}
 
-          <article className="prose-lg max-w-none text-asf-text/90 leading-relaxed whitespace-pre-line">
-            {post.content}
+          <article dir="auto" className="prose-lg max-w-none text-asf-text/90 leading-relaxed whitespace-pre-line">
+            {content}
           </article>
 
           <div className="mt-10 pt-6 border-t border-asf-border flex flex-wrap items-center justify-between gap-3">
@@ -91,7 +109,7 @@ export default async function NewsArticlePage({ params }: Props) {
               <ArrowLeft className="w-4 h-4" aria-hidden />
               Back to News
             </Link>
-            <ShareButtons url={fullUrl} title={post.title} />
+            <ShareButtons url={fullUrl} title={title} />
           </div>
         </div>
       </section>
@@ -101,7 +119,7 @@ export default async function NewsArticlePage({ params }: Props) {
           <div className="max-w-6xl mx-auto px-4 sm:px-8 py-12">
             <h2 className="font-display font-bold text-2xl text-asf-text mb-6">Related news</h2>
             <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {related.map((p) => (
+              {relatedView.map((p) => (
                 <li key={p.id}>
                   <NewsCard post={p} />
                 </li>
