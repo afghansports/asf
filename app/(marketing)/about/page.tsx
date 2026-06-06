@@ -23,7 +23,6 @@ const VALUE_ICONS = [Users, Target, Heart, Shield];
 const SUB_PAGES = [
   { href: "/about/mission", label: "Mission and Vision" },
   { href: "/about/history", label: "History" },
-  { href: "/about/team", label: "Management Team" },
 ];
 
 export default async function AboutPage() {

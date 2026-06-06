@@ -15,7 +15,6 @@ const ITEMS = [
   { href: "/about", label: "About ASF" },
   { href: "/about/mission", label: "Mission and Vision" },
   { href: "/about/history", label: "History" },
-  { href: "/about/team", label: "Management Team" },
 ];
 
 export function AboutMenu({ tone = "navy" }: { tone?: "navy" | "white" }) {

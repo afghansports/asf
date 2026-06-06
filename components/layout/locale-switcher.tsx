@@ -21,13 +21,17 @@ function writeCookie(name: string, value: string) {
 /**
  * <LocaleSwitcher /> — small dropdown that flips the active language and the
  * <html> dir/lang attributes. The choice is persisted in a cookie so it
- * survives reloads. Server components can read the cookie too if we ever wire
+ * survives reloads. `tone` styles it for a dark surface (footer) or a light
+ * surface (navbar). Server components can read the cookie too if we ever wire
  * server-side rendering of translated strings.
- *
- * Phase 1: only `en` is fully translated; `fa-AF` and `ps` fall back to `en`
- * keys and flip the page direction to RTL so layout work can begin.
  */
-export function LocaleSwitcher({ className }: { className?: string }) {
+export function LocaleSwitcher({
+  className,
+  tone = "dark",
+}: {
+  className?: string;
+  tone?: "light" | "dark";
+}) {
   const [locale, setLocale] = useState<string>("en");
 
   useEffect(() => {
@@ -52,15 +56,21 @@ export function LocaleSwitcher({ className }: { className?: string }) {
     applyLocale(code);
   }
 
+  const labelCls =
+    className ??
+    (tone === "light"
+      ? "inline-flex items-center gap-2 text-xs text-asf-text"
+      : "inline-flex items-center gap-2 text-xs text-white/70");
+  const selectCls =
+    tone === "light"
+      ? "bg-white border border-asf-border rounded px-2 py-1 text-xs text-asf-text focus:outline-none focus:ring-1 focus:ring-asf-red/40 cursor-pointer"
+      : "bg-transparent border border-white/20 rounded px-2 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-white/40 cursor-pointer";
+
   return (
-    <label className={className ?? "inline-flex items-center gap-2 text-xs text-white/70"}>
+    <label className={labelCls}>
       <Globe className="w-3.5 h-3.5" aria-hidden />
       <span className="sr-only">Language</span>
-      <select
-        value={locale}
-        onChange={(e) => onChange(e.target.value)}
-        className="bg-transparent border border-white/20 rounded px-2 py-1 text-xs text-white focus:outline-none focus:ring-1 focus:ring-white/40"
-      >
+      <select value={locale} onChange={(e) => onChange(e.target.value)} className={selectCls}>
         {SUPPORTED_LOCALES.map((l) => (
           <option key={l.code} value={l.code} className="text-asf-text">
             {l.nativeLabel}

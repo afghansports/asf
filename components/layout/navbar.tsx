@@ -6,6 +6,7 @@ import { AboutMenu } from "./about-menu";
 import { UserMenu } from "./user-menu";
 import { MobileDrawer } from "./mobile-drawer";
 import { NotificationBell } from "./notification-bell";
+import { LocaleSwitcher } from "./locale-switcher";
 import { getFlags } from "@/lib/features/flags";
 import { NAV_FLAG_KEYS } from "@/lib/features/nav-config";
 
@@ -54,7 +55,7 @@ export async function Navbar() {
           <Logo
             size={36}
             withText
-            textClassName="hidden sm:inline max-w-[12rem] truncate"
+            textClassName="hidden lg:inline-block max-w-[12rem] truncate align-middle"
           />
         </div>
 
@@ -76,6 +77,10 @@ export async function Navbar() {
 
         {/* Right cluster */}
         <div className="flex shrink-0 items-center gap-2">
+          <LocaleSwitcher
+            tone="light"
+            className="hidden md:inline-flex items-center gap-2 text-xs text-asf-text"
+          />
           {flags["module.search"] ? (
             <Link
               href="/search"

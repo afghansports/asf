@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, Video, MessageSquare, User } from "lucide-react";
+import { Home, Sparkles, Info, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isLinkVisible } from "@/lib/features/nav-config";
 
@@ -23,11 +23,10 @@ const ITEMS: {
   match: (p: string) => boolean;
   flag?: string;
 }[] = [
-  { href: "/",            label: "Home",    icon: Home,          match: (p) => p === "/" },
-  { href: "/feed",        label: "Wall",    icon: Sparkles,      match: (p) => p.startsWith("/feed"),        flag: "module.wall" },
-  { href: "/reels",       label: "Reels",   icon: Video,         match: (p) => p.startsWith("/reels"),       flag: "module.reels" },
-  { href: "/discussions", label: "Talk",    icon: MessageSquare, match: (p) => p.startsWith("/discussions"), flag: "module.discussions" },
-  { href: "/dashboard",   label: "Me",      icon: User,          match: (p) => p.startsWith("/dashboard") || p.startsWith("/profile") },
+  { href: "/",            label: "Home",     icon: Home,     match: (p) => p === "/" },
+  { href: "/feed",        label: "Wall",     icon: Sparkles, match: (p) => p.startsWith("/feed"), flag: "module.wall" },
+  { href: "/about",       label: "About",    icon: Info,     match: (p) => p === "/about" || (p.startsWith("/about/") && !p.startsWith("/about/team")) },
+  { href: "/about/team",  label: "ASF Team", icon: Users,    match: (p) => p.startsWith("/about/team") },
 ];
 
 export function BottomNav({ flags }: { flags: Record<string, boolean> }) {

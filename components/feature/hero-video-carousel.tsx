@@ -117,7 +117,7 @@ export function HeroVideoCarousel({
             {ctaPrimary}
           </Link>
           <Link
-            href="/events"
+            href="/feed"
             className="inline-flex items-center justify-center h-11 w-full max-w-[20rem] sm:w-auto px-6 rounded-md border border-white/60 bg-white/10 backdrop-blur-sm text-white font-condensed font-bold text-sm tracking-[0.18em] uppercase hover:bg-white/20 transition-colors"
           >
             {ctaSecondary}
