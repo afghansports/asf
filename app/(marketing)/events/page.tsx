@@ -9,6 +9,7 @@ import { US_STATES } from "@/lib/data/us-states";
 import { EventsFilterBar } from "./events-filter-bar";
 import { isFeatureEnabled } from "@/lib/features/flags";
 import { ModuleDisabled } from "@/components/shared/module-disabled";
+import { getLocale, translateMany, isTranslatable } from "@/lib/i18n/translate";
 
 /**
  * /events. Per ASF_LAUNCH_PRD.md > STEP 9 > /events.
@@ -69,6 +70,14 @@ export default async function EventsListPage({
   const events = (rows ?? []) as EventCardData[];
   const view = sp.view === "map" ? "map" : "list";
 
+  // Auto-translate visible event titles for Dari/Pashto readers (cached).
+  const locale = await getLocale();
+  let items = events;
+  if (isTranslatable(locale) && events.length) {
+    const titles = await translateMany(events.map((e) => e.title ?? ""), locale);
+    items = events.map((e, i) => ({ ...e, title: titles[i] || e.title }));
+  }
+
   const stateName = sp.state
     ? US_STATES.find((s) => s.code === sp.state)?.name ?? sp.state
     : "Northern Virginia";
@@ -115,7 +124,7 @@ export default async function EventsListPage({
             />
           ) : (
             <ul className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {events.map((e) => (
+              {items.map((e) => (
                 <li key={e.id}>
                   <EventCard event={e} />
                 </li>

@@ -6,6 +6,7 @@ import { PageHero } from "@/components/shared/page-hero";
 import { EmptyState } from "@/components/shared/empty-state";
 import { isFeatureEnabled } from "@/lib/features/flags";
 import { ModuleDisabled } from "@/components/shared/module-disabled";
+import { getLocale, translateMany, isTranslatable } from "@/lib/i18n/translate";
 
 export const metadata: Metadata = {
   title: "Discussions",
@@ -59,6 +60,19 @@ export default async function DiscussionsListPage({
     : { data: [] };
   const authorMap = new Map((authors ?? []).map((a) => [a.id, a]));
 
+  // Auto-translate visible thread title + preview for Dari/Pashto readers (cached).
+  const locale = await getLocale();
+  const list = threads ?? [];
+  let items = list;
+  if (isTranslatable(locale) && list.length) {
+    const n = list.length;
+    const tx = await translateMany(
+      [...list.map((x) => x.title ?? ""), ...list.map((x) => x.body ?? "")],
+      locale,
+    );
+    items = list.map((x, i) => ({ ...x, title: tx[i] || x.title, body: tx[n + i] || x.body }));
+  }
+
   return (
     <>
       <PageHero
@@ -93,7 +107,7 @@ export default async function DiscussionsListPage({
             />
           ) : (
             <ul className="space-y-3">
-              {threads.map((t) => {
+              {items.map((t) => {
                 const author = authorMap.get(t.author_id);
                 const lastBy = t.last_reply_by ? authorMap.get(t.last_reply_by) : null;
                 return (
