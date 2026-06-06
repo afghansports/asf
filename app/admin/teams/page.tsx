@@ -3,6 +3,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { AdminToggle } from "../_toggle";
 import { toggleTeamActive, toggleTeamAffiliate } from "../_actions";
+import { ModuleToggle } from "../modules/module-toggle";
+import { isFeatureEnabled } from "@/lib/features/flags";
 
 export const metadata = { title: "Admin teams" };
 
@@ -14,9 +16,19 @@ export default async function AdminTeamsPage() {
     .order("created_at", { ascending: false })
     .limit(200);
 
+  const moduleEnabled = await isFeatureEnabled("module.teams");
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
-      <h1 className="font-display font-black text-3xl text-asf-text mb-6">Teams</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <h1 className="font-display font-black text-3xl text-asf-text">Teams</h1>
+        <div className="flex items-center gap-2">
+          <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
+            Show on site
+          </span>
+          <ModuleToggle flagKey="module.teams" initialEnabled={moduleEnabled} />
+        </div>
+      </div>
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">

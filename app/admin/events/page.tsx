@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { ActionButton } from "../_action-button";
 import { approveEvent, rejectEvent, toggleEventFeatured } from "../_actions";
 import { EventEditForm } from "./event-edit-form";
+import { ModuleToggle } from "../modules/module-toggle";
+import { isFeatureEnabled } from "@/lib/features/flags";
 
 export const metadata = { title: "Admin events" };
 
@@ -34,6 +36,8 @@ export default async function AdminEventsPage({
   if (filter === "published") query = query.eq("is_published", true);
   const { data: events } = await query.limit(200);
 
+  const moduleEnabled = await isFeatureEnabled("module.events");
+
   const editing = editId ? events?.find((e) => e.id === editId) : null;
 
   // Organizer names
@@ -47,27 +51,35 @@ export default async function AdminEventsPage({
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="font-display font-black text-3xl text-asf-text">Events</h1>
-        <div className="inline-flex rounded-md border border-asf-border bg-white overflow-hidden">
-          {[
-            { code: "all", label: "All" },
-            { code: "pending", label: "Pending" },
-            { code: "published", label: "Published" },
-          ].map((o) => {
-            const active = filter === o.code;
-            return (
-              <Link
-                key={o.code}
-                href={o.code === "all" ? "/admin/events" : `/admin/events?filter=${o.code}`}
-                className={
-                  active
-                    ? "h-9 px-3 inline-flex items-center text-xs font-condensed font-bold tracking-[0.16em] uppercase bg-asf-navy text-white"
-                    : "h-9 px-3 inline-flex items-center text-xs font-condensed font-bold tracking-[0.16em] uppercase text-asf-text hover:bg-asf-off-2"
-                }
-              >
-                {o.label}
-              </Link>
-            );
-          })}
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="inline-flex rounded-md border border-asf-border bg-white overflow-hidden">
+            {[
+              { code: "all", label: "All" },
+              { code: "pending", label: "Pending" },
+              { code: "published", label: "Published" },
+            ].map((o) => {
+              const active = filter === o.code;
+              return (
+                <Link
+                  key={o.code}
+                  href={o.code === "all" ? "/admin/events" : `/admin/events?filter=${o.code}`}
+                  className={
+                    active
+                      ? "h-9 px-3 inline-flex items-center text-xs font-condensed font-bold tracking-[0.16em] uppercase bg-asf-navy text-white"
+                      : "h-9 px-3 inline-flex items-center text-xs font-condensed font-bold tracking-[0.16em] uppercase text-asf-text hover:bg-asf-off-2"
+                  }
+                >
+                  {o.label}
+                </Link>
+              );
+            })}
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
+              Show on site
+            </span>
+            <ModuleToggle flagKey="module.events" initialEnabled={moduleEnabled} />
+          </div>
         </div>
       </div>
 

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ActionButton } from "../_action-button";
 import { adminConfirmMatch, deleteMatch } from "../_chapters-actions";
+import { ModuleToggle } from "../modules/module-toggle";
+import { isFeatureEnabled } from "@/lib/features/flags";
 
 export const metadata = { title: "Admin matches" };
 
@@ -15,6 +17,8 @@ export default async function AdminMatchesPage() {
     .order("created_at", { ascending: false })
     .limit(200);
 
+  const moduleEnabled = await isFeatureEnabled("module.matches");
+
   const ids = Array.from(new Set((rows ?? []).flatMap((m) => [m.home_team_id, m.away_team_id]).filter(Boolean) as string[]));
   const { data: teams } = ids.length
     ? await supabase.from("teams").select("id, name").in("id", ids)
@@ -23,9 +27,17 @@ export default async function AdminMatchesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
-      <div className="mb-6">
-        <h1 className="font-display font-black text-3xl text-asf-text">Matches</h1>
-        <p className="text-sm text-asf-muted mt-1">Reported matches auto-confirm 48h after submission. Confirm earlier or delete here.</p>
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
+        <div>
+          <h1 className="font-display font-black text-3xl text-asf-text">Matches</h1>
+          <p className="text-sm text-asf-muted mt-1">Reported matches auto-confirm 48h after submission. Confirm earlier or delete here.</p>
+        </div>
+        <div className="flex items-center gap-2 pt-1">
+          <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
+            Show on site
+          </span>
+          <ModuleToggle flagKey="module.matches" initialEnabled={moduleEnabled} />
+        </div>
       </div>
       <div className="rounded-lg border border-asf-border bg-white overflow-x-auto">
         <table className="w-full text-sm">

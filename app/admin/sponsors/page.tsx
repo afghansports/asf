@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { ActionButton } from "../_action-button";
 import { deleteSponsor } from "../_actions";
 import { SponsorForm } from "./form";
+import { ModuleToggle } from "../modules/module-toggle";
+import { isFeatureEnabled } from "@/lib/features/flags";
 
 export const metadata = { title: "Admin sponsors" };
 
@@ -53,14 +55,27 @@ export default async function AdminSponsorsPage({
     .select("id, name, logo_url, website_url, tier, sort_order, is_active")
     .order("sort_order", { ascending: true });
 
+  const moduleEnabled = await isFeatureEnabled("module.sponsors");
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-8 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="font-display font-black text-3xl text-asf-text">Sponsors</h1>
-        <Link href="/admin/sponsors?new=1" className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.16em] uppercase hover:bg-asf-red-dark">
-          <PlusCircle className="w-3.5 h-3.5" aria-hidden />
-          Add sponsor
-        </Link>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
+              Show on site
+            </span>
+            <ModuleToggle flagKey="module.sponsors" initialEnabled={moduleEnabled} />
+          </div>
+          <Link
+            href="/admin/sponsors?new=1"
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.16em] uppercase hover:bg-asf-red-dark"
+          >
+            <PlusCircle className="w-3.5 h-3.5" aria-hidden />
+            New sponsor
+          </Link>
+        </div>
       </div>
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">

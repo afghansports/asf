@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { ActionButton } from "../_action-button";
 import { deleteNewsPost } from "../_actions";
 import { NewsForm } from "./news-form";
+import { ModuleToggle } from "../modules/module-toggle";
+import { isFeatureEnabled } from "@/lib/features/flags";
 
 export const metadata = { title: "Admin news" };
 
@@ -79,17 +81,27 @@ export default async function AdminNewsPage({
     .select("id, title, slug, is_published, published_at, created_at")
     .order("created_at", { ascending: false });
 
+  const moduleEnabled = await isFeatureEnabled("module.news");
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-8 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="font-display font-black text-3xl text-asf-text">News</h1>
-        <Link
-          href="/admin/news?new=1"
-          className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.16em] uppercase hover:bg-asf-red-dark"
-        >
-          <PlusCircle className="w-3.5 h-3.5" aria-hidden />
-          New post
-        </Link>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
+              Show on site
+            </span>
+            <ModuleToggle flagKey="module.news" initialEnabled={moduleEnabled} />
+          </div>
+          <Link
+            href="/admin/news?new=1"
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.16em] uppercase hover:bg-asf-red-dark"
+          >
+            <PlusCircle className="w-3.5 h-3.5" aria-hidden />
+            New post
+          </Link>
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
