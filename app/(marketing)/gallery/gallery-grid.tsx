@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X, ImageIcon } from "lucide-react";
 import { cdnUrl } from "@/lib/cdn/cloudflare";
+import { detectMediaKind, youtubeEmbedUrl } from "@/lib/gallery/media";
 
 export type GalleryItem = {
   id: string;
@@ -93,45 +94,104 @@ export function GalleryGrid({ items }: Props) {
         </div>
       ) : (
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-          {visible.map((it, idx) => (
-            <button
-              type="button"
-              key={it.id}
-              onClick={() => setOpen(idx)}
-              className="block w-full mb-4 break-inside-avoid overflow-hidden rounded-lg border border-asf-border bg-asf-off text-left hover:ring-2 hover:ring-asf-red/30 transition"
-            >
-              {it.image_url ? (
-                <div className="relative w-full h-64">
-                  <Image
-                    src={cdnUrl(it.image_url)}
-                    alt={it.caption ?? ""}
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    unoptimized
-                  />
-                </div>
-              ) : (
-                <div
-                  className="w-full bg-gradient-to-br from-asf-navy via-asf-navy-light to-asf-navy text-white/60 flex items-center justify-center"
-                  style={{ height: 220 + ((idx * 41) % 110) }}
-                  aria-hidden
-                >
-                  <ImageIcon className="w-10 h-10" />
-                </div>
-              )}
-              {it.caption ? (
+          {visible.map((it, idx) => {
+            const kind = it.image_url ? detectMediaKind(it.image_url) : "image";
+            const caption =
+              it.caption || it.event_name || it.year ? (
                 <p className="p-3 text-xs text-asf-muted">
-                  <span className="text-asf-text font-medium">{it.caption}</span>
+                  {it.caption ? <span className="text-asf-text font-medium">{it.caption}</span> : null}
                   {it.event_name || it.year ? (
                     <span className="block text-[0.7rem] mt-0.5">
                       {[it.event_name, it.year].filter(Boolean).join(" . ")}
                     </span>
                   ) : null}
                 </p>
-              ) : null}
-            </button>
-          ))}
+              ) : null;
+
+            // Video and YouTube render inline (the media is itself interactive,
+            // so it must not be nested inside the lightbox <button>).
+            if (it.image_url && kind === "youtube") {
+              const embed = youtubeEmbedUrl(it.image_url);
+              return (
+                <div
+                  key={it.id}
+                  className="block w-full mb-4 break-inside-avoid overflow-hidden rounded-lg border border-asf-border bg-asf-off"
+                >
+                  {embed ? (
+                    <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
+                      <iframe
+                        src={embed}
+                        title={it.caption ?? it.event_name ?? "Gallery video"}
+                        className="absolute inset-0 h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="w-full bg-gradient-to-br from-asf-navy via-asf-navy-light to-asf-navy text-white/60 flex items-center justify-center"
+                      style={{ height: 220 }}
+                      aria-hidden
+                    >
+                      <ImageIcon className="w-10 h-10" />
+                    </div>
+                  )}
+                  {caption}
+                </div>
+              );
+            }
+
+            if (it.image_url && kind === "video") {
+              return (
+                <div
+                  key={it.id}
+                  className="block w-full mb-4 break-inside-avoid overflow-hidden rounded-lg border border-asf-border bg-asf-off"
+                >
+                  <video
+                    src={cdnUrl(it.image_url)}
+                    controls
+                    preload="metadata"
+                    playsInline
+                    className="w-full max-h-80 bg-black"
+                  />
+                  {caption}
+                </div>
+              );
+            }
+
+            // Image (and the legacy no-URL placeholder) open the lightbox.
+            return (
+              <button
+                type="button"
+                key={it.id}
+                onClick={() => setOpen(idx)}
+                className="block w-full mb-4 break-inside-avoid overflow-hidden rounded-lg border border-asf-border bg-asf-off text-left hover:ring-2 hover:ring-asf-red/30 transition"
+              >
+                {it.image_url ? (
+                  <div className="relative w-full h-64">
+                    <Image
+                      src={cdnUrl(it.image_url)}
+                      alt={it.caption ?? ""}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      unoptimized
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="w-full bg-gradient-to-br from-asf-navy via-asf-navy-light to-asf-navy text-white/60 flex items-center justify-center"
+                    style={{ height: 220 + ((idx * 41) % 110) }}
+                    aria-hidden
+                  >
+                    <ImageIcon className="w-10 h-10" />
+                  </div>
+                )}
+                {caption}
+              </button>
+            );
+          })}
         </div>
       )}
 
@@ -181,24 +241,57 @@ export function GalleryGrid({ items }: Props) {
           </button>
 
           <figure className="relative max-w-5xl w-full" onClick={(e) => e.stopPropagation()}>
-            {visible[open].image_url ? (
-              <Image
-                src={cdnUrl(visible[open].image_url)}
-                alt={visible[open].caption ?? ""}
-                width={1200}
-                height={800}
-                className="w-full max-h-[80vh] object-contain"
-                unoptimized
-              />
-            ) : (
-              <div
-                className="w-full bg-gradient-to-br from-asf-navy via-asf-navy-light to-asf-navy text-white/60 flex items-center justify-center"
-                style={{ height: "60vh" }}
-                aria-hidden
-              >
-                <ImageIcon className="w-16 h-16" />
-              </div>
-            )}
+            {(() => {
+              const current = visible[open];
+              const kind = current.image_url ? detectMediaKind(current.image_url) : "image";
+
+              if (current.image_url && kind === "youtube") {
+                const embed = youtubeEmbedUrl(current.image_url);
+                return embed ? (
+                  <div className="relative w-full" style={{ aspectRatio: "16/9", maxHeight: "80vh" }}>
+                    <iframe
+                      src={embed}
+                      title={current.caption ?? current.event_name ?? "Gallery video"}
+                      className="absolute inset-0 h-full w-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : null;
+              }
+
+              if (current.image_url && kind === "video") {
+                return (
+                  <video
+                    src={cdnUrl(current.image_url)}
+                    controls
+                    autoPlay
+                    preload="metadata"
+                    playsInline
+                    className="w-full max-h-[80vh] bg-black"
+                  />
+                );
+              }
+
+              return current.image_url ? (
+                <Image
+                  src={cdnUrl(current.image_url)}
+                  alt={current.caption ?? ""}
+                  width={1200}
+                  height={800}
+                  className="w-full max-h-[80vh] object-contain"
+                  unoptimized
+                />
+              ) : (
+                <div
+                  className="w-full bg-gradient-to-br from-asf-navy via-asf-navy-light to-asf-navy text-white/60 flex items-center justify-center"
+                  style={{ height: "60vh" }}
+                  aria-hidden
+                >
+                  <ImageIcon className="w-16 h-16" />
+                </div>
+              );
+            })()}
             <figcaption className="mt-3 text-center text-white/80 text-sm">
               {visible[open].caption}
               {visible[open].event_name || visible[open].year ? (

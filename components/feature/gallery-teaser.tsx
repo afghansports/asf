@@ -1,9 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ImageIcon, ArrowRight } from "lucide-react";
+import { ImageIcon, ArrowRight, Play } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { SectionLabel } from "@/components/shared/section-label";
 import { EmptyState } from "@/components/shared/empty-state";
+import { detectMediaKind, youtubeEmbedUrl } from "@/lib/gallery/media";
+
+/** YouTube thumbnail from the embed URL, for a static poster in the teaser. */
+function youtubeThumb(url: string): string | null {
+  const embed = youtubeEmbedUrl(url);
+  if (!embed) return null;
+  const id = embed.split("/embed/")[1];
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+}
 
 /**
  * GalleryTeaser (server). Per ASF_LAUNCH_PRD.md > STEP 5 > Gallery Teaser.
@@ -67,12 +76,16 @@ export async function GalleryTeaser() {
           />
         ) : (
           <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-            {items.map((it, idx) => (
+            {items.map((it, idx) => {
+              const kind = it.image_url ? detectMediaKind(it.image_url) : "image";
+              const poster =
+                kind === "youtube" && it.image_url ? youtubeThumb(it.image_url) : null;
+              return (
               <figure
                 key={it.id}
                 className="mb-4 break-inside-avoid overflow-hidden rounded-lg border border-asf-border bg-asf-off"
               >
-                {it.image_url ? (
+                {it.image_url && kind === "image" ? (
                   <div className="relative w-full h-56">
                     <Image
                       src={it.image_url}
@@ -82,6 +95,26 @@ export async function GalleryTeaser() {
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                       unoptimized
                     />
+                  </div>
+                ) : it.image_url ? (
+                  // Video / YouTube: static poster (or play badge) linking users
+                  // to the full gallery, where the media plays inline.
+                  <div className="relative w-full h-56 bg-asf-navy">
+                    {poster ? (
+                      <Image
+                        src={poster}
+                        alt={it.caption ?? "ASF gallery video"}
+                        fill
+                        className="object-cover opacity-90"
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        unoptimized
+                      />
+                    ) : null}
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-black/50 text-white">
+                        <Play className="h-6 w-6" aria-hidden />
+                      </span>
+                    </span>
                   </div>
                 ) : (
                   <div
@@ -103,7 +136,8 @@ export async function GalleryTeaser() {
                   </figcaption>
                 ) : null}
               </figure>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
