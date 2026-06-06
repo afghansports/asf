@@ -12,7 +12,6 @@ import {
   Building2,
   HelpCircle,
   Clock,
-  HandHeart,
 } from "lucide-react";
 
 export const metadata = { title: "Admin CMS" };
@@ -41,8 +40,7 @@ const SECTIONS: Section[] = [
   { href: "/admin/history",       label: "History timeline",    description: "Year-by-year ASF milestones for the About page.",         icon: Clock,     group: "content" },
 
   // People + partners
-  { href: "/admin/team-members",  label: "Management Team",     description: "Board members + key staff. Photo, role, bio.",            icon: Users,     group: "people" },
-  { href: "/admin/volunteers",    label: "Volunteers",          description: "Active volunteers + hours logged. Photo, role, hours.",   icon: HandHeart, group: "people" },
+  { href: "/admin/team-members",  label: "ASF Team",            description: "Team members by category (management, alumni). Photo, role, bio.", icon: Users,     group: "people" },
   { href: "/admin/sponsors",      label: "Sponsors",            description: "Sponsor logo, tier, website, active toggle.",             icon: Building2, group: "people" },
 ];
 

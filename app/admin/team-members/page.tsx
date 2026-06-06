@@ -3,13 +3,15 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PlusCircle, Edit3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getTeamCategories, labelForCategory } from "@/lib/team/categories";
+import { cn } from "@/lib/utils";
 import { ActionButton } from "../_action-button";
 import { deleteTeamMember } from "../_actions";
 import { TeamMemberForm } from "./form";
 
-export const metadata = { title: "Admin team members" };
+export const metadata = { title: "Admin ASF Team" };
 
-type SearchParams = { id?: string; new?: string };
+type SearchParams = { id?: string; new?: string; category?: string };
 
 export default async function AdminTeamMembersPage({
   searchParams,
@@ -22,6 +24,8 @@ export default async function AdminTeamMembersPage({
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+
+  const categories = await getTeamCategories();
 
   if (sp.id) {
     const { data: row } = await supabase
@@ -37,7 +41,11 @@ export default async function AdminTeamMembersPage({
             Back to list
           </Link>
         </div>
-        <TeamMemberForm userId={user.id} initial={(row as Record<string, unknown>) ?? {}} />
+        <TeamMemberForm
+          userId={user.id}
+          initial={(row as Record<string, unknown>) ?? {}}
+          categories={categories}
+        />
       </div>
     );
   }
@@ -51,20 +59,25 @@ export default async function AdminTeamMembersPage({
             Back to list
           </Link>
         </div>
-        <TeamMemberForm userId={user.id} initial={{}} />
+        <TeamMemberForm userId={user.id} initial={{}} categories={categories} />
       </div>
     );
   }
 
-  const { data: rows } = await supabase
+  const activeCategory =
+    sp.category && categories.includes(sp.category) ? sp.category : null;
+
+  let listQuery = supabase
     .from("management_team")
     .select("id, name, role, category, photo_url, sort_order, is_active")
     .order("sort_order", { ascending: true });
+  if (activeCategory) listQuery = listQuery.eq("category", activeCategory);
+  const { data: rows } = await listQuery;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-8 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h1 className="font-display font-black text-3xl text-asf-text">Management team</h1>
+        <h1 className="font-display font-black text-3xl text-asf-text">ASF Team</h1>
         <Link
           href="/admin/team-members?new=1"
           className="inline-flex items-center gap-2 h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.16em] uppercase hover:bg-asf-red-dark"
@@ -72,6 +85,18 @@ export default async function AdminTeamMembersPage({
           <PlusCircle className="w-3.5 h-3.5" aria-hidden />
           Add member
         </Link>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        <FilterChip href="/admin/team-members" label="All" active={!activeCategory} />
+        {categories.map((c) => (
+          <FilterChip
+            key={c}
+            href={`/admin/team-members?category=${encodeURIComponent(c)}`}
+            label={labelForCategory(c)}
+            active={activeCategory === c}
+          />
+        ))}
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
@@ -154,5 +179,22 @@ function Th({ children }: { children: React.ReactNode }) {
     <th className="px-4 py-3 font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
       {children}
     </th>
+  );
+}
+
+function FilterChip({ href, label, active }: { href: string; label: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "h-8 px-4 inline-flex items-center rounded-full font-condensed font-bold text-xs tracking-[0.18em] uppercase transition-colors",
+        active
+          ? "bg-asf-red text-white"
+          : "bg-white border border-asf-border text-asf-text hover:bg-asf-off-2"
+      )}
+    >
+      {label}
+    </Link>
   );
 }

@@ -21,13 +21,29 @@ type Initial = {
   is_active?: boolean;
 };
 
-export function TeamMemberForm({ userId, initial }: { userId: string; initial: Initial }) {
+function labelForCategory(c: string): string {
+  return c
+    .split(/[\s_-]+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
+export function TeamMemberForm({
+  userId,
+  initial,
+  categories,
+}: {
+  userId: string;
+  initial: Initial;
+  categories: string[];
+}) {
   const router = useRouter();
   const [name, setName] = useState(initial.name ?? "");
   const [role, setRole] = useState(initial.role ?? "");
   const [bio, setBio] = useState(initial.bio ?? "");
   const [photoUrl, setPhotoUrl] = useState<string | null>(initial.photo_url ?? null);
-  const [category, setCategory] = useState(initial.category ?? "board");
+  const [category, setCategory] = useState(initial.category ?? categories[0] ?? "management");
   const [sortOrder, setSortOrder] = useState(String(initial.sort_order ?? 0));
   const [isActive, setIsActive] = useState(initial.is_active ?? true);
   const [pending, start] = useTransition();
@@ -74,15 +90,17 @@ export function TeamMemberForm({ userId, initial }: { userId: string; initial: I
 
       <div className="space-y-1.5">
         <Label>Photo</Label>
-        <ImageUpload
-          bucket="management"
-          pathPrefix={`uploads/${userId}`}
-          initialUrl={photoUrl}
-          maxBytes={5 * 1024 * 1024}
-          aspectRatio="1/1"
-          label="Upload photo"
-          onUploaded={(u) => setPhotoUrl(u)}
-        />
+        <div className="max-w-[12rem]">
+          <ImageUpload
+            bucket="management"
+            pathPrefix={`uploads/${userId}`}
+            initialUrl={photoUrl}
+            maxBytes={5 * 1024 * 1024}
+            aspectRatio="1/1"
+            label="Upload photo"
+            onUploaded={(u) => setPhotoUrl(u)}
+          />
+        </div>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-3">
@@ -94,8 +112,11 @@ export function TeamMemberForm({ userId, initial }: { userId: string; initial: I
             onChange={(e) => setCategory(e.target.value)}
             className="h-10 w-full rounded-md border border-asf-border bg-white px-3 text-sm"
           >
-            <option value="board">Board</option>
-            <option value="volunteer">Volunteer</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {labelForCategory(c)}
+              </option>
+            ))}
           </select>
         </div>
         <div className="space-y-1.5">
