@@ -45,7 +45,7 @@ export default async function SearchPage({
   const showAll = type === "all";
 
   // Run only the queries we need.
-  const [people, teams, events, tournaments, reels, news, hashtags] = await Promise.all([
+  const [people, teams, events, tournaments, reels, news, hashtags, staff] = await Promise.all([
     !empty && (showAll || type === "people")
       ? supabase
           .from("profiles")
@@ -103,6 +103,17 @@ export default async function SearchPage({
           .order("reel_count", { ascending: false })
           .limit(20)
       : Promise.resolve({ data: [] }),
+    // ASF Team / leadership roster (president, coordinators, alumni). These are
+    // not registered profiles, so search them here and link to /about/team.
+    !empty && (showAll || type === "people")
+      ? supabase
+          .from("management_team")
+          .select("id, name, role, photo_url, category")
+          .eq("is_active", true)
+          .or(`name.ilike.${pattern},role.ilike.${pattern}`)
+          .order("sort_order", { ascending: true })
+          .limit(20)
+      : Promise.resolve({ data: [] }),
   ]);
 
   const totalHits =
@@ -112,7 +123,8 @@ export default async function SearchPage({
     (tournaments.data?.length ?? 0) +
     (reels.data?.length ?? 0) +
     (news.data?.length ?? 0) +
-    (hashtags.data?.length ?? 0);
+    (hashtags.data?.length ?? 0) +
+    (staff.data?.length ?? 0);
 
   return (
     <>
@@ -194,6 +206,33 @@ export default async function SearchPage({
                           <VerifiedBadge status={p.verification_status} />
                         </span>
                         <span className="block text-xs text-asf-muted">@{p.username}</span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Group>
+          ) : null}
+
+          {(showAll || type === "people") && (staff.data ?? []).length > 0 ? (
+            <Group icon={<Users className="w-4 h-4" aria-hidden />} title="ASF Team">
+              <ul className="grid gap-3 sm:grid-cols-2">
+                {staff.data!.map((m) => (
+                  <li key={m.id}>
+                    <Link
+                      href="/about/team"
+                      className="flex items-center gap-3 p-3 rounded-md bg-white border border-asf-border hover:border-asf-red/40"
+                    >
+                      <span className="relative inline-flex w-9 h-9 rounded-full bg-asf-navy text-white items-center justify-center font-condensed font-bold text-xs overflow-hidden">
+                        {m.photo_url ? (
+                          <FillImage src={m.photo_url} alt="" className="object-cover" sizes="36px" />
+                        ) : (
+                          <span aria-hidden>{(m.name ?? "?").charAt(0).toUpperCase()}</span>
+                        )}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-sm text-asf-text truncate">{m.name}</span>
+                        <span className="block text-xs text-asf-muted">{m.role}</span>
                       </span>
                     </Link>
                   </li>
