@@ -92,7 +92,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-screen flex bg-asf-off">
-      <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-asf-border bg-asf-navy text-white">
+      <aside className="hidden md:flex w-60 shrink-0 flex-col border-e border-asf-border bg-asf-navy text-white">
         <div className="px-5 py-5 border-b border-white/10">
           <Logo size={36} withText textVariant="white" />
           <p className="mt-2 font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-gold">

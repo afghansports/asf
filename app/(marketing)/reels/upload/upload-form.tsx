@@ -304,7 +304,7 @@ export function UploadForm({ userId }: { userId: string }) {
               placeholder="https://www.youtube.com/watch?v=…"
               value={youtubeUrl}
               onChange={(e) => setYoutubeUrl(e.target.value)}
-              className="pl-9"
+              className="ps-9"
             />
           </div>
           <p className="text-xs text-asf-muted">

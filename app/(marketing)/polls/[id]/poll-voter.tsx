@@ -86,7 +86,7 @@ export function PollVoter({
                 disabled={!isAuthed || isClosed || optimistic.myOptionId !== null || pending}
                 onClick={() => vote(o.id)}
                 className={cn(
-                  "relative block w-full text-left rounded-md border bg-white p-3 overflow-hidden transition-colors",
+                  "relative block w-full text-start rounded-md border bg-white p-3 overflow-hidden transition-colors",
                   mine ? "border-asf-red bg-asf-red-light" : "border-asf-border",
                   !showResults && !isClosed && isAuthed && "hover:border-asf-red/40 cursor-pointer",
                   (showResults || isClosed) && "cursor-default",
@@ -104,7 +104,7 @@ export function PollVoter({
                 ) : null}
                 <div className="relative flex items-center justify-between gap-3">
                   <span className="font-medium text-asf-text">
-                    {mine ? <Check className="inline-block w-3.5 h-3.5 mr-1 text-asf-red" aria-hidden /> : null}
+                    {mine ? <Check className="inline-block w-3.5 h-3.5 me-1 text-asf-red" aria-hidden /> : null}
                     {o.label}
                   </span>
                   {showResults ? (

@@ -77,7 +77,7 @@ export default async function AdminSportsPage() {
                 <ul className="text-sm text-asf-text space-y-0.5">
                   {(positionsBySport.get(sp.code) ?? []).map((p) => (
                     <li key={p.code}>
-                      <span className="font-mono text-xs text-asf-muted mr-2">{p.abbrev ?? p.code}</span>
+                      <span className="font-mono text-xs text-asf-muted me-2">{p.abbrev ?? p.code}</span>
                       {p.name}
                     </li>
                   ))}
@@ -102,7 +102,7 @@ export default async function AdminSportsPage() {
                 <ul className="text-sm text-asf-text space-y-0.5">
                   {(formatsBySport.get(sp.code) ?? []).map((f) => (
                     <li key={f.code}>
-                      <span className="font-mono text-xs text-asf-muted mr-2">{f.code}</span>
+                      <span className="font-mono text-xs text-asf-muted me-2">{f.code}</span>
                       {f.label}
                     </li>
                   ))}

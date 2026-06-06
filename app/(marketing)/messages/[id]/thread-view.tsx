@@ -99,14 +99,14 @@ export function ThreadView({
                   className={cn(
                     "max-w-[75%] px-3 py-2 rounded-2xl text-sm whitespace-pre-line break-words",
                     mine
-                      ? "ml-auto bg-asf-red text-white rounded-br-sm"
-                      : "mr-auto bg-asf-off-2 text-asf-text rounded-bl-sm",
+                      ? "ms-auto bg-asf-red text-white rounded-br-sm"
+                      : "me-auto bg-asf-off-2 text-asf-text rounded-bl-sm",
                   )}
                 >
                   {m.body}
                 </div>
                 {showReadIndicator ? (
-                  <p className="text-right text-[0.65rem] text-asf-muted mt-0.5 pr-1">
+                  <p className="text-end text-[0.65rem] text-asf-muted mt-0.5 pe-1">
                     {myLastReadByOthers ? "Read" : "Sent"}
                   </p>
                 ) : null}

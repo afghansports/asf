@@ -12,7 +12,7 @@ export default function SearchLoading() {
         <div className="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex flex-wrap items-center gap-3">
           <Skeleton className="h-9 w-80 rounded-md" />
           <Skeleton className="h-9 w-20 rounded-md" />
-          <div className="flex flex-wrap gap-1 ml-auto">
+          <div className="flex flex-wrap gap-1 ms-auto">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-9 w-16 rounded-md" />
             ))}

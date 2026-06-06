@@ -140,7 +140,7 @@ export function ProfileRoleManager({
                 type="button"
                 onClick={() => add(k)}
                 disabled={pending}
-                className="w-full text-left p-3 rounded-md border border-asf-border bg-white hover:border-asf-red/50 hover:shadow-sm transition-all"
+                className="w-full text-start p-3 rounded-md border border-asf-border bg-white hover:border-asf-red/50 hover:shadow-sm transition-all"
               >
                 <p className="text-sm font-display font-bold text-asf-text inline-flex items-center gap-1.5">
                   <Plus className="w-3.5 h-3.5 text-asf-red" />

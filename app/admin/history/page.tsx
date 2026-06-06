@@ -64,7 +64,7 @@ export default async function AdminHistoryPage({
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">
-            <tr className="text-left">
+            <tr className="text-start">
               <Th>Year</Th>
               <Th>Title</Th>
               <Th>Description</Th>

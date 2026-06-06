@@ -200,7 +200,7 @@ function BasicInfoTab({ initial }: { initial: ProfileEditInitial }) {
           }
         >
           <div className="flex items-stretch h-10 rounded-md border border-asf-border bg-white">
-            <span className="inline-flex items-center px-3 text-asf-muted text-sm border-r border-asf-border">@</span>
+            <span className="inline-flex items-center px-3 text-asf-muted text-sm border-e border-asf-border">@</span>
             <input
               id="username"
               required
@@ -318,7 +318,7 @@ function PlayerTab({ initial }: { initial: ProfileEditInitial }) {
       />
 
       {isPlayer ? (
-        <div className="space-y-5 pl-1 border-l-2 border-asf-red/30 pl-4">
+        <div className="space-y-5 ps-1 border-s-2 border-asf-red/30 ps-4">
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Sport" htmlFor="sport">
               <SportPicker

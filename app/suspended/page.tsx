@@ -63,7 +63,7 @@ export default async function SuspendedPage() {
             Suspension ends in <strong>{daysLeft} day{daysLeft === 1 ? "" : "s"}</strong>.
           </p>
         ) : null}
-        <div className="rounded-md p-4 bg-white/10 border border-white/20 text-sm text-white/85 inline-flex items-start gap-2 max-w-md text-left">
+        <div className="rounded-md p-4 bg-white/10 border border-white/20 text-sm text-white/85 inline-flex items-start gap-2 max-w-md text-start">
           <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" aria-hidden />
           <span>
             If you believe this is a mistake, you can submit an appeal. ASF moderators review

@@ -158,7 +158,7 @@ export function TournamentsAdmin({ rows, userId }: { rows: TournamentRow[]; user
 
       <div className="rounded-lg border border-asf-border bg-white overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-asf-off border-b border-asf-border text-left">
+          <thead className="bg-asf-off border-b border-asf-border text-start">
             <tr>
               <Th>Name</Th>
               <Th>Sport</Th>
@@ -204,7 +204,7 @@ export function TournamentsAdmin({ rows, userId }: { rows: TournamentRow[]; user
                     ariaLabel="Feature toggle"
                   />
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <ActionButton
                     action={deleteTournament.bind(null, t.id)}
                     label="Delete"

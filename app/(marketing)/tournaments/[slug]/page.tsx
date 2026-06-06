@@ -148,11 +148,11 @@ export default async function TournamentDetailPage({ params }: Props) {
                 </p>
               ) : null}
               <p className="text-xs text-asf-muted">
-                <Users className="inline-block w-3.5 h-3.5 mr-1" aria-hidden />
+                <Users className="inline-block w-3.5 h-3.5 me-1" aria-hidden />
                 {registered.length} teams registered
               </p>
               <p className="text-xs text-asf-muted capitalize">
-                <Trophy className="inline-block w-3.5 h-3.5 mr-1" aria-hidden />
+                <Trophy className="inline-block w-3.5 h-3.5 me-1" aria-hidden />
                 Format: {t.format.replace("_", " ")}
               </p>
             </div>

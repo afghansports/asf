@@ -69,7 +69,7 @@ function ProvinceSelect({
           <button
             type="button"
             disabled={disabled}
-            className="h-10 w-full inline-flex items-center justify-between gap-2 px-3 rounded-md border border-asf-border bg-white text-sm text-left hover:bg-asf-off-2 disabled:opacity-50"
+            className="h-10 w-full inline-flex items-center justify-between gap-2 px-3 rounded-md border border-asf-border bg-white text-sm text-start hover:bg-asf-off-2 disabled:opacity-50"
           >
             <span className={selected ? "text-asf-text" : "text-asf-muted"}>
               {selected?.name ?? "Select province"}
@@ -86,7 +86,7 @@ function ProvinceSelect({
                 type="button"
                 onClick={() => onChange(p.code)}
                 className={cn(
-                  "w-full text-left px-3 py-2 rounded-md text-sm hover:bg-asf-off-2",
+                  "w-full text-start px-3 py-2 rounded-md text-sm hover:bg-asf-off-2",
                   value === p.code ? "bg-asf-off-2 font-medium" : ""
                 )}
               >
@@ -145,7 +145,7 @@ function DistrictSelect({
           <button
             type="button"
             disabled={disabled || districts.length === 0}
-            className="h-10 w-full inline-flex items-center justify-between gap-2 px-3 rounded-md border border-asf-border bg-white text-sm text-left hover:bg-asf-off-2 disabled:opacity-50"
+            className="h-10 w-full inline-flex items-center justify-between gap-2 px-3 rounded-md border border-asf-border bg-white text-sm text-start hover:bg-asf-off-2 disabled:opacity-50"
           >
             <span className={selected ? "text-asf-text" : "text-asf-muted"}>
               {loading ? "Loading districts..." : selected?.name ?? (districts.length === 0 ? "No districts seeded" : "Select district")}
@@ -162,7 +162,7 @@ function DistrictSelect({
                 type="button"
                 onClick={() => onChange(d.code)}
                 className={cn(
-                  "w-full text-left px-3 py-2 rounded-md text-sm hover:bg-asf-off-2",
+                  "w-full text-start px-3 py-2 rounded-md text-sm hover:bg-asf-off-2",
                   value === d.code ? "bg-asf-off-2 font-medium" : ""
                 )}
               >

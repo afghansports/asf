@@ -144,7 +144,7 @@ export default async function SearchPage({
               Search
             </button>
           </form>
-          <ul className="flex flex-wrap gap-1 ml-auto">
+          <ul className="flex flex-wrap gap-1 ms-auto">
             {TYPES.map((t) => {
               const active = type === t.code;
               return (

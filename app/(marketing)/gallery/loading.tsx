@@ -15,7 +15,7 @@ export default function GalleryLoading() {
           <div className="flex flex-wrap items-center gap-3 mb-8">
             <Skeleton className="h-9 w-32 rounded-md" />
             <Skeleton className="h-9 w-32 rounded-md" />
-            <Skeleton className="h-4 w-20 rounded ml-auto" />
+            <Skeleton className="h-4 w-20 rounded ms-auto" />
           </div>
           {/* Masonry grid */}
           <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">

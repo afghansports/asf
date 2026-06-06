@@ -70,7 +70,7 @@ export default function ScoresLoading() {
                         <Skeleton className="h-3 w-4 rounded" />
                         <Skeleton className="h-4 w-4 rounded" />
                         <SkeletonLine width="40%" />
-                        <Skeleton className="h-3 w-5 rounded ml-auto" />
+                        <Skeleton className="h-3 w-5 rounded ms-auto" />
                         <Skeleton className="h-3 w-5 rounded" />
                         <Skeleton className="h-3 w-5 rounded" />
                       </div>

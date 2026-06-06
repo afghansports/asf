@@ -94,7 +94,7 @@ export default async function FreeAgentsPage({
               Apply
             </button>
           </form>
-          <span className="ml-auto text-xs text-asf-muted">{list.length} players</span>
+          <span className="ms-auto text-xs text-asf-muted">{list.length} players</span>
         </div>
       </div>
 
@@ -142,7 +142,7 @@ export default async function FreeAgentsPage({
                           </p>
                           <p className="text-xs text-asf-muted">@{p.username}</p>
                         </div>
-                        <span className="ml-auto inline-flex items-center px-2 py-0.5 rounded bg-asf-gold text-asf-text text-[0.6rem] font-condensed font-bold tracking-[0.18em] uppercase">
+                        <span className="ms-auto inline-flex items-center px-2 py-0.5 rounded bg-asf-gold text-asf-text text-[0.6rem] font-condensed font-bold tracking-[0.18em] uppercase">
                           Free agent
                         </span>
                       </div>

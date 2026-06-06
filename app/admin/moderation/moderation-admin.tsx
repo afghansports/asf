@@ -75,7 +75,7 @@ function Row({ profile }: { profile: ProfileLite }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-3 text-left"
+        className="w-full flex items-center gap-3 text-start"
       >
         <span className="relative inline-flex w-9 h-9 rounded-full bg-asf-navy text-white items-center justify-center font-condensed font-bold text-xs overflow-hidden shrink-0">
           {profile.avatar_url ? (
@@ -88,10 +88,10 @@ function Row({ profile }: { profile: ProfileLite }) {
           <p className="text-sm text-asf-text truncate">
             {profile.full_name ?? profile.username}
             {profile.verification_status === "verified" ? (
-              <BadgeCheck className="inline-block w-3.5 h-3.5 ml-1 text-blue-500 fill-current" />
+              <BadgeCheck className="inline-block w-3.5 h-3.5 ms-1 text-blue-500 fill-current" />
             ) : null}
             {profile.verification_status === "official" ? (
-              <BadgeCheck className="inline-block w-3.5 h-3.5 ml-1 text-asf-gold fill-current" />
+              <BadgeCheck className="inline-block w-3.5 h-3.5 ms-1 text-asf-gold fill-current" />
             ) : null}
           </p>
           <p className="text-xs text-asf-muted">@{profile.username}</p>
@@ -119,7 +119,7 @@ function Row({ profile }: { profile: ProfileLite }) {
       </button>
 
       {open ? (
-        <div className="mt-4 pl-12 space-y-5">
+        <div className="mt-4 ps-12 space-y-5">
           {msg.kind === "ok" ? <Alert className="border-asf-green/40 bg-asf-green-light text-asf-green">{msg.m}</Alert> : null}
           {msg.kind === "err" ? <Alert className="border-asf-red/40 bg-asf-red-light text-asf-red">{msg.m}</Alert> : null}
 

@@ -51,7 +51,7 @@ export function CookieBanner() {
       className="fixed inset-x-0 bottom-0 z-50 overflow-hidden border-t border-asf-border bg-white shadow-[0_-8px_24px_-12px_rgba(0,0,0,0.18)]"
     >
       <div className="mx-auto w-full max-w-6xl px-4 py-3 sm:px-8 sm:py-4 sm:flex sm:items-center sm:justify-between sm:gap-4">
-        <div className="relative flex min-w-0 items-start gap-3 pr-8 sm:pr-0">
+        <div className="relative flex min-w-0 items-start gap-3 pe-8 sm:pe-0">
           <Cookie className="w-5 h-5 text-asf-navy mt-0.5 shrink-0" aria-hidden />
           <p className="min-w-0 text-xs sm:text-sm text-asf-text leading-relaxed break-words">
             We use cookies.{" "}
@@ -66,7 +66,7 @@ export function CookieBanner() {
           <button
             aria-label="Close cookie banner"
             onClick={() => setVisible(false)}
-            className="absolute right-0 top-0 inline-flex items-center justify-center w-7 h-7 text-asf-muted hover:text-asf-text rounded-md hover:bg-asf-off-2 sm:static sm:ml-1 sm:shrink-0"
+            className="absolute right-0 top-0 inline-flex items-center justify-center w-7 h-7 text-asf-muted hover:text-asf-text rounded-md hover:bg-asf-off-2 sm:static sm:ms-1 sm:shrink-0"
           >
             <X className="w-4 h-4" aria-hidden />
           </button>

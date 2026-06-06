@@ -324,7 +324,7 @@ function RosterTab({ initial }: { initial: ManageInitial }) {
         </div>
         <div className="flex items-stretch gap-2">
           <div className="flex items-stretch h-10 flex-1 rounded-md border border-asf-border bg-white">
-            <span className="inline-flex items-center px-3 text-asf-muted text-xs border-r border-asf-border">@</span>
+            <span className="inline-flex items-center px-3 text-asf-muted text-xs border-e border-asf-border">@</span>
             <input
               value={search}
               onChange={(e) => {
@@ -379,7 +379,7 @@ function RosterTab({ initial }: { initial: ManageInitial }) {
       <div className="rounded-lg border border-asf-border bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">
-            <tr className="text-left">
+            <tr className="text-start">
               <th className="px-4 py-3 font-condensed font-bold text-xs tracking-[0.18em] uppercase text-asf-muted">Player</th>
               <th className="px-4 py-3 font-condensed font-bold text-xs tracking-[0.18em] uppercase text-asf-muted">Role</th>
               <th className="px-4 py-3"></th>
@@ -426,7 +426,7 @@ function RosterTab({ initial }: { initial: ManageInitial }) {
                       </select>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     {isCaptain ? null : (
                       <button
                         type="button"

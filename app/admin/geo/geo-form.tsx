@@ -155,7 +155,7 @@ export function GeoAdmin({ rows }: { rows: DistrictRow[] }) {
             </option>
           ))}
         </select>
-        <span className="text-xs text-asf-muted ml-auto">
+        <span className="text-xs text-asf-muted ms-auto">
           {visible.length} districts
         </span>
       </div>
@@ -164,7 +164,7 @@ export function GeoAdmin({ rows }: { rows: DistrictRow[] }) {
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">
-            <tr className="text-left">
+            <tr className="text-start">
               <Th>Province</Th>
               <Th>Code</Th>
               <Th>Name</Th>
@@ -185,7 +185,7 @@ export function GeoAdmin({ rows }: { rows: DistrictRow[] }) {
                     ariaLabel={`Active toggle for ${r.name}`}
                   />
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-2 text-end">
                   <ActionButton
                     action={deleteDistrict.bind(null, r.id)}
                     label="Delete"

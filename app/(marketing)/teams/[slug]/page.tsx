@@ -255,7 +255,7 @@ export default async function TeamDetailPage({ params }: Props) {
               <div className="mt-3 overflow-x-auto rounded-lg border border-asf-border bg-white">
                 <table className="w-full text-sm">
                   <thead className="bg-asf-off border-b border-asf-border">
-                    <tr className="text-left">
+                    <tr className="text-start">
                       <th className="px-4 py-3 font-condensed font-bold text-xs tracking-[0.18em] uppercase text-asf-muted">Player</th>
                       <th className="px-4 py-3 font-condensed font-bold text-xs tracking-[0.18em] uppercase text-asf-muted">Role</th>
                       <th className="px-4 py-3 font-condensed font-bold text-xs tracking-[0.18em] uppercase text-asf-muted">Position</th>

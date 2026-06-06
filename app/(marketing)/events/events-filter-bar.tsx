@@ -42,7 +42,7 @@ export function EventsFilterBar() {
   return (
     <div className="sticky top-16 z-20 bg-white/95 backdrop-blur border-b border-asf-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex flex-wrap items-center gap-3">
-        <span className="inline-flex items-center gap-1.5 text-asf-muted text-xs font-condensed font-bold tracking-[0.18em] uppercase mr-1">
+        <span className="inline-flex items-center gap-1.5 text-asf-muted text-xs font-condensed font-bold tracking-[0.18em] uppercase me-1">
           <Filter className="w-3.5 h-3.5" aria-hidden />
           Filters
         </span>
@@ -114,7 +114,7 @@ export function EventsFilterBar() {
           ))}
         </select>
 
-        <div role="tablist" aria-label="View" className="ml-auto inline-flex rounded-md border border-asf-border bg-white overflow-hidden">
+        <div role="tablist" aria-label="View" className="ms-auto inline-flex rounded-md border border-asf-border bg-white overflow-hidden">
           {[
             { code: "list", label: "List", icon: List },
             { code: "map", label: "Map", icon: MapIcon },
@@ -141,7 +141,7 @@ export function EventsFilterBar() {
           })}
           <Link
             href="/events/calendar"
-            className="inline-flex items-center gap-1.5 h-9 px-3 text-xs font-condensed font-bold tracking-[0.16em] uppercase text-asf-text hover:bg-asf-off-2 border-l border-asf-border"
+            className="inline-flex items-center gap-1.5 h-9 px-3 text-xs font-condensed font-bold tracking-[0.16em] uppercase text-asf-text hover:bg-asf-off-2 border-s border-asf-border"
           >
             <CalendarDays className="w-3.5 h-3.5" aria-hidden />
             <span>Calendar</span>

@@ -158,7 +158,7 @@ export function ChaptersAdmin({ rows, userId }: { rows: ChapterRow[]; userId: st
 
       <div className="rounded-lg border border-asf-border bg-white overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-asf-off border-b border-asf-border text-left">
+          <thead className="bg-asf-off border-b border-asf-border text-start">
             <tr>
               <Th>Name</Th>
               <Th>Location</Th>
@@ -200,7 +200,7 @@ export function ChaptersAdmin({ rows, userId }: { rows: ChapterRow[]; userId: st
                     ariaLabel={`Active toggle for ${r.name}`}
                   />
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <ActionButton
                     action={deleteChapter.bind(null, r.id)}
                     label="Delete"

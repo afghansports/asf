@@ -45,7 +45,7 @@ export default function PrivacyPage() {
             <section className="space-y-3">
               <h2 className="font-display font-bold text-2xl text-asf-text">What we collect</h2>
               <p className="font-medium">Information you give us:</p>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Account: email, password (stored hashed via Supabase Auth), date of birth for age verification.</li>
                 <li>Profile: full name, username, bio, photo, country, state or province, city, sport, position, free-agent status.</li>
                 <li>Optional: phone number, links to your other social accounts.</li>
@@ -53,13 +53,13 @@ export default function PrivacyPage() {
                 <li>Parental consent records, when applicable, for members aged 13 to 15.</li>
               </ul>
               <p className="font-medium pt-2">Information collected automatically:</p>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Standard server logs: IP address, user agent, requested URL, timestamp. Retained 90 days.</li>
                 <li>Aggregate usage metrics via Plausible Analytics (cookieless, no cross-site tracking).</li>
                 <li>If you opt in: web push subscription endpoint, used only to deliver notifications you asked for.</li>
               </ul>
               <p className="font-medium pt-2">We do not collect:</p>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Government IDs, social security numbers, or passport numbers.</li>
                 <li>Financial account information. Payments, when offered, are handled by third-party processors.</li>
                 <li>Precise GPS location. Country and city are entered by you.</li>
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
 
             <section className="space-y-3">
               <h2 className="font-display font-bold text-2xl text-asf-text">Why we use it</h2>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Run the service: profile pages, teams, events, tournaments, reels, messaging.</li>
                 <li>Notify you about activity you opted in to (mentions, follows, match updates).</li>
                 <li>Moderate content and enforce community standards (see Trust &amp; Safety below).</li>
@@ -80,7 +80,7 @@ export default function PrivacyPage() {
 
             <section className="space-y-3">
               <h2 className="font-display font-bold text-2xl text-asf-text">Legal bases (GDPR)</h2>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Contract: to provide the service you signed up for.</li>
                 <li>Consent: marketing emails, web push notifications, optional profile fields.</li>
                 <li>Legitimate interest: security, abuse prevention, basic analytics.</li>
@@ -90,7 +90,7 @@ export default function PrivacyPage() {
 
             <section className="space-y-3">
               <h2 className="font-display font-bold text-2xl text-asf-text">Service providers</h2>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li><strong>Supabase</strong> — database, authentication, file storage. EU and US regions.</li>
                 <li><strong>Vercel</strong> — application hosting and edge delivery.</li>
                 <li><strong>Resend</strong> — transactional email delivery.</li>
@@ -108,7 +108,7 @@ export default function PrivacyPage() {
             <section className="space-y-3">
               <h2 className="font-display font-bold text-2xl text-asf-text">Your rights</h2>
               <p>You can:</p>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Access and download all your data from <em>Profile &gt; Edit profile &gt; Data export</em>.</li>
                 <li>Correct inaccurate information directly in your profile settings.</li>
                 <li>Delete your account from <em>Profile &gt; Edit profile &gt; Delete account</em>. Deletion is soft for 90 days, then permanent.</li>
@@ -131,7 +131,7 @@ export default function PrivacyPage() {
               <p>
                 For members under 18 we additionally:
               </p>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Default privacy settings to the most restrictive option.</li>
                 <li>Disable direct messages from non-followed adults.</li>
                 <li>Apply enhanced moderation to content involving minors.</li>
@@ -159,7 +159,7 @@ export default function PrivacyPage() {
 
             <section className="space-y-3">
               <h2 className="font-display font-bold text-2xl text-asf-text">Retention</h2>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Active account data: kept while your account is active.</li>
                 <li>Server logs: 90 days.</li>
                 <li>Soft-deleted accounts: 90 days, then permanent purge.</li>

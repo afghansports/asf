@@ -59,7 +59,7 @@ export function AppealRow({ appeal }: Props) {
         </div>
       </div>
 
-      <p className="text-sm text-asf-text/90 whitespace-pre-line border-l-2 border-asf-border pl-3">{appeal.reason_text}</p>
+      <p className="text-sm text-asf-text/90 whitespace-pre-line border-s-2 border-asf-border ps-3">{appeal.reason_text}</p>
 
       {msg.kind === "ok" ? <Alert className="border-asf-green/40 bg-asf-green-light text-asf-green">{msg.m}</Alert> : null}
       {msg.kind === "err" ? <Alert className="border-asf-red/40 bg-asf-red-light text-asf-red">{msg.m}</Alert> : null}

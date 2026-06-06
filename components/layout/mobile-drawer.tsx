@@ -144,7 +144,7 @@ export function MobileDrawer({
                     />
                   </button>
                   {aboutOpen ? (
-                    <ul className="pl-3 pb-1">
+                    <ul className="ps-3 pb-1">
                       {ABOUT_NAV.map((l) => (
                         <DrawerItem
                           key={l.href}

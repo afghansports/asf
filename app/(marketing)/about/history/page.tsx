@@ -68,7 +68,7 @@ export default async function HistoryPage() {
       <section className="w-full bg-asf-off">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 py-16">
           <SectionLabel>Timeline</SectionLabel>
-          <ol className="mt-10 relative pl-6 sm:pl-8 border-l-2 border-asf-red/30 space-y-10">
+          <ol className="mt-10 relative ps-6 sm:ps-8 border-s-2 border-asf-red/30 space-y-10">
             {timeline.map((entry) => (
               <li key={entry.id} className="relative">
                 <span

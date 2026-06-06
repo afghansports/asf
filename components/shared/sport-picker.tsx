@@ -38,7 +38,7 @@ export function SportPicker({
             type="button"
             disabled={disabled}
             className={cn(
-              "h-10 w-full inline-flex items-center justify-between gap-2 px-3 rounded-md border border-asf-border bg-white text-sm text-left hover:bg-asf-off-2 disabled:opacity-50 disabled:cursor-not-allowed",
+              "h-10 w-full inline-flex items-center justify-between gap-2 px-3 rounded-md border border-asf-border bg-white text-sm text-start hover:bg-asf-off-2 disabled:opacity-50 disabled:cursor-not-allowed",
               className
             )}
           >
@@ -64,7 +64,7 @@ export function SportPicker({
                 type="button"
                 onClick={() => onChange("")}
                 className={cn(
-                  "w-full text-left px-3 py-2 rounded-md text-sm hover:bg-asf-off-2",
+                  "w-full text-start px-3 py-2 rounded-md text-sm hover:bg-asf-off-2",
                   value === "" ? "bg-asf-off-2 font-medium" : ""
                 )}
               >
@@ -86,7 +86,7 @@ export function SportPicker({
                   )}
                 >
                   <Icon className="w-4 h-4 text-asf-navy" aria-hidden />
-                  <span className="flex-1 text-left">{s.name}</span>
+                  <span className="flex-1 text-start">{s.name}</span>
                 </button>
               </li>
             );

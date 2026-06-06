@@ -99,7 +99,7 @@ export default async function AdminWallPage({
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">
-            <tr className="text-left">
+            <tr className="text-start">
               <Th>Kind</Th>
               <Th>Title</Th>
               <Th>Flags</Th>
@@ -210,7 +210,7 @@ export default async function AdminWallPage({
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-3 font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted text-left">
+    <th className="px-4 py-3 font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted text-start">
       {children}
     </th>
   );

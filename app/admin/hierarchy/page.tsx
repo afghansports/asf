@@ -76,20 +76,20 @@ export default async function AdminHierarchyPage() {
             </Link>
             <ul className="px-5 py-3 space-y-3">
               {(chsByFed.get(fed.id) ?? []).map((ch) => (
-                <li key={ch.id} className="border-l-2 border-asf-border pl-4">
+                <li key={ch.id} className="border-s-2 border-asf-border ps-4">
                   <Link href={`/chapters/${ch.slug}`} className="font-display font-bold text-sm text-asf-text inline-flex items-center gap-2 hover:text-asf-red">
                     <Building className="w-3.5 h-3.5" />
                     {ch.name}
                     <span className="text-xs text-asf-muted capitalize font-normal">({ch.tier})</span>
                   </Link>
-                  <ul className="mt-1.5 space-y-1.5 ml-4">
+                  <ul className="mt-1.5 space-y-1.5 ms-4">
                     {(clubsByCh.get(ch.id) ?? []).map((cl) => (
                       <li key={cl.id}>
                         <Link href={`/clubs/${cl.slug}`} className="text-sm text-asf-text inline-flex items-center gap-2 hover:text-asf-red">
                           <Shield className="w-3.5 h-3.5 text-asf-red" />
                           {cl.name}
                         </Link>
-                        <ul className="ml-5 mt-1 space-y-0.5">
+                        <ul className="ms-5 mt-1 space-y-0.5">
                           {(teamsByClub.get(cl.id) ?? []).map((t) => (
                             <li key={t.id}>
                               <Link href={`/teams/${t.slug}`} className="text-xs text-asf-muted hover:text-asf-red">
@@ -102,7 +102,7 @@ export default async function AdminHierarchyPage() {
                     ))}
                     {(teamsByCh.get(ch.id) ?? []).map((t) => (
                       <li key={t.id}>
-                        <Link href={`/teams/${t.slug}`} className="text-xs text-asf-muted hover:text-asf-red ml-1">
+                        <Link href={`/teams/${t.slug}`} className="text-xs text-asf-muted hover:text-asf-red ms-1">
                           ◦ {t.name} <span className="text-asf-muted/70">({t.sport}, no club)</span>
                         </Link>
                       </li>

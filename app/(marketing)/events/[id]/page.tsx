@@ -203,7 +203,7 @@ export default async function EventDetailPage({ params }: Props) {
                 className="block w-full text-center rounded-lg p-4 bg-asf-red text-white font-condensed font-bold text-sm tracking-[0.18em] uppercase hover:bg-asf-red-dark transition-colors"
               >
                 Register
-                <ExternalLink className="inline-block w-3.5 h-3.5 ml-1.5" aria-hidden />
+                <ExternalLink className="inline-block w-3.5 h-3.5 ms-1.5" aria-hidden />
               </a>
             ) : null}
 
@@ -234,7 +234,7 @@ export default async function EventDetailPage({ params }: Props) {
                     className="block text-xs text-asf-muted hover:text-asf-red"
                   >
                     Hosted by {organizerTeam.name}
-                    <ArrowRight className="inline-block w-3.5 h-3.5 ml-1" aria-hidden />
+                    <ArrowRight className="inline-block w-3.5 h-3.5 ms-1" aria-hidden />
                   </Link>
                 ) : null}
               </div>

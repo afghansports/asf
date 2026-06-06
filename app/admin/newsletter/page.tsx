@@ -30,7 +30,7 @@ export default async function AdminNewsletterPage() {
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">
-            <tr className="text-left">
+            <tr className="text-start">
               <Th>Email</Th>
               <Th>Name</Th>
               <Th>Country</Th>

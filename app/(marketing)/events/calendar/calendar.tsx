@@ -108,7 +108,7 @@ export function MonthCalendar({ events }: { events: CalEvent[] }) {
             <div
               key={key}
               className={cn(
-                "min-h-[120px] sm:min-h-[140px] border-r border-b border-asf-border last:border-r-0 p-2 flex flex-col gap-1",
+                "min-h-[120px] sm:min-h-[140px] border-e border-b border-asf-border last:border-e-0 p-2 flex flex-col gap-1",
                 !day.inMonth && "bg-asf-off/50",
               )}
             >

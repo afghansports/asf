@@ -80,7 +80,7 @@ export default async function AdminMatchesPage({
       ) : null}
       <div className="rounded-lg border border-asf-border bg-white overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-asf-off border-b border-asf-border text-left">
+          <thead className="bg-asf-off border-b border-asf-border text-start">
             <tr>
               <Th>Date</Th>
               <Th>Sport</Th>
@@ -104,7 +104,7 @@ export default async function AdminMatchesPage({
                 </td>
                 <td className="px-4 py-3 text-asf-text">{teamMap.get(m.away_team_id) ?? "-"}</td>
                 <td className="px-4 py-3 capitalize text-asf-muted">{m.status}</td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <div className="inline-flex gap-1.5">
                     <Link
                       href={`/matches/${m.id}`}

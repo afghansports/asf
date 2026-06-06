@@ -27,7 +27,7 @@ export default function TermsPage() {
 
             <section className="space-y-3">
               <h2 className="font-display font-bold text-2xl text-asf-text">2. Eligibility</h2>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>You must be at least 13 years old.</li>
                 <li>If you are 13 to 15, your parent or legal guardian must provide verifiable consent.</li>
                 <li>You must provide accurate registration information and keep it up to date.</li>
@@ -48,7 +48,7 @@ export default function TermsPage() {
             <section className="space-y-3">
               <h2 className="font-display font-bold text-2xl text-asf-text">4. Acceptable use</h2>
               <p>You will not:</p>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li>Harass, threaten, or abuse other members.</li>
                 <li>Post content that is hateful, sexually explicit, or inciting violence.</li>
                 <li>Share private information about another person without their consent.</li>
@@ -86,7 +86,7 @@ export default function TermsPage() {
                 We may remove content, restrict features, or suspend accounts that violate these
                 Terms or our Community Guidelines. The general progression is:
               </p>
-              <ul className="list-disc pl-5 space-y-1.5">
+              <ul className="list-disc ps-5 space-y-1.5">
                 <li><strong>Strike:</strong> minor violation. Content removed; warning issued.</li>
                 <li><strong>Read-only suspension:</strong> repeated minor violations. You can browse but cannot post for a defined period.</li>
                 <li><strong>Full suspension:</strong> serious or repeated violations. You cannot access the Service.</li>

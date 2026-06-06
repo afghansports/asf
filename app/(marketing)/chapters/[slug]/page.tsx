@@ -165,7 +165,7 @@ export default async function ChapterDetailPage({ params }: Props) {
               href="/contact"
               className="block w-full text-center rounded-lg p-4 bg-asf-navy text-white font-condensed font-bold text-sm tracking-[0.18em] uppercase hover:bg-asf-navy-light"
             >
-              <Mail className="inline-block w-4 h-4 mr-1.5" aria-hidden />
+              <Mail className="inline-block w-4 h-4 me-1.5" aria-hidden />
               Contact ASF about this chapter
             </Link>
           </aside>

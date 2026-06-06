@@ -33,7 +33,7 @@ export default function CommunityGuidelinesPage() {
 
           <article className="space-y-3">
             <SectionLabel>1. Be respectful</SectionLabel>
-            <ul className="list-disc pl-5 space-y-1">
+            <ul className="list-disc ps-5 space-y-1">
               <li>No personal attacks, slurs, or insults toward another user.</li>
               <li>No harassment, stalking, or repeated unwanted contact.</li>
               <li>Disagree about the game, not the person.</li>
@@ -61,7 +61,7 @@ export default function CommunityGuidelinesPage() {
 
           <article className="space-y-3">
             <SectionLabel>4. Be honest</SectionLabel>
-            <ul className="list-disc pl-5 space-y-1">
+            <ul className="list-disc ps-5 space-y-1">
               <li>Do not impersonate other people, teams, or ASF staff.</li>
               <li>Do not submit false match results.</li>
               <li>Do not file false reports against others.</li>
@@ -71,7 +71,7 @@ export default function CommunityGuidelinesPage() {
 
           <article className="space-y-3">
             <SectionLabel>5. Keep it appropriate</SectionLabel>
-            <ul className="list-disc pl-5 space-y-1">
+            <ul className="list-disc ps-5 space-y-1">
               <li>No nudity or sexual content.</li>
               <li>No graphic violence or gore.</li>
               <li>Profile photos should show your face, not be misleading.</li>
@@ -81,7 +81,7 @@ export default function CommunityGuidelinesPage() {
 
           <article className="space-y-3">
             <SectionLabel>6. No spam</SectionLabel>
-            <ul className="list-disc pl-5 space-y-1">
+            <ul className="list-disc ps-5 space-y-1">
               <li>Do not post the same content repeatedly.</li>
               <li>Do not run unsolicited commercial promotions.</li>
               <li>Do not mass-follow or mass-message users you do not know.</li>
@@ -104,7 +104,7 @@ export default function CommunityGuidelinesPage() {
 
           <article className="space-y-3">
             <SectionLabel>8. Protect young people</SectionLabel>
-            <ul className="list-disc pl-5 space-y-1">
+            <ul className="list-disc ps-5 space-y-1">
               <li>You must be at least 13 to use ASF.</li>
               <li>Users under 16 require a parent or guardian to confirm their account by email.</li>
               <li>Teams with players under 18 must list a safeguarding contact.</li>

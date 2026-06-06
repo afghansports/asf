@@ -63,14 +63,14 @@ export default async function AdminRecoveryPage() {
         <p className="text-sm text-asf-muted mt-1">
           Requests from users who lost access to their email. Verify identity out-of-band before
           approving. Approving changes the account&apos;s login email and sends a password-reset link.
-          <span className="ml-1 text-asf-text font-medium">{pendingCount} pending.</span>
+          <span className="ms-1 text-asf-text font-medium">{pendingCount} pending.</span>
         </p>
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">
-            <tr className="text-left">
+            <tr className="text-start">
               <Th>Claimed identity</Th>
               <Th>New email</Th>
               <Th>Details</Th>

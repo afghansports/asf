@@ -122,7 +122,7 @@ export function CommentThread({
                 ) : (
                   <span className="text-asf-text font-medium">You</span>
                 )}
-                <span className="ml-2">{relativeTime(c.created_at)}</span>
+                <span className="ms-2">{relativeTime(c.created_at)}</span>
               </p>
               <p className="text-sm text-asf-text whitespace-pre-line break-words mt-1">{c.body}</p>
             </div>

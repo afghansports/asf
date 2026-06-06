@@ -102,7 +102,7 @@ export default async function AdminTeamMembersPage({
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">
-            <tr className="text-left">
+            <tr className="text-start">
               <Th>Photo</Th>
               <Th>Name</Th>
               <Th>Role</Th>

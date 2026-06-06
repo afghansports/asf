@@ -112,7 +112,7 @@ export default async function AdminEventsPage({
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">
-            <tr className="text-left">
+            <tr className="text-start">
               <Th>Title</Th>
               <Th>Type</Th>
               <Th>Location</Th>
@@ -157,7 +157,7 @@ export default async function AdminEventsPage({
                     </span>
                   )}
                   {e.is_featured ? (
-                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded bg-asf-red text-white text-[0.65rem] font-condensed font-bold tracking-[0.18em] uppercase">
+                    <span className="ms-2 inline-flex items-center px-2 py-0.5 rounded bg-asf-red text-white text-[0.65rem] font-condensed font-bold tracking-[0.18em] uppercase">
                       Featured
                     </span>
                   ) : null}

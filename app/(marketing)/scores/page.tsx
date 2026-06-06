@@ -212,12 +212,12 @@ export default async function ScoresPage() {
                       </p>
                       <table className="w-full text-xs">
                         <thead className="text-asf-muted">
-                          <tr className="text-left">
+                          <tr className="text-start">
                             <th className="py-1 font-condensed font-bold tracking-wider uppercase">#</th>
                             <th className="py-1 font-condensed font-bold tracking-wider uppercase">Team</th>
-                            <th className="py-1 font-condensed font-bold tracking-wider uppercase text-right">P</th>
-                            <th className="py-1 font-condensed font-bold tracking-wider uppercase text-right">GD</th>
-                            <th className="py-1 font-condensed font-bold tracking-wider uppercase text-right">Pts</th>
+                            <th className="py-1 font-condensed font-bold tracking-wider uppercase text-end">P</th>
+                            <th className="py-1 font-condensed font-bold tracking-wider uppercase text-end">GD</th>
+                            <th className="py-1 font-condensed font-bold tracking-wider uppercase text-end">Pts</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -238,11 +238,11 @@ export default async function ScoresPage() {
                                   {r.team_name}
                                 </span>
                               </td>
-                              <td className="py-1.5 text-right">{r.played}</td>
-                              <td className="py-1.5 text-right">
+                              <td className="py-1.5 text-end">{r.played}</td>
+                              <td className="py-1.5 text-end">
                                 {r.goal_difference > 0 ? `+${r.goal_difference}` : r.goal_difference}
                               </td>
-                              <td className="py-1.5 text-right font-bold text-asf-text">{r.points}</td>
+                              <td className="py-1.5 text-end font-bold text-asf-text">{r.points}</td>
                             </tr>
                           ))}
                         </tbody>

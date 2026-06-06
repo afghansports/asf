@@ -73,7 +73,7 @@ export function CmsEditor({ title, description, fields, initial }: Props) {
             <p className="text-sm text-asf-muted mt-1">{description}</p>
           ) : null}
         </div>
-        <p className="hidden sm:block text-[0.65rem] tracking-[0.22em] uppercase font-condensed font-bold text-asf-muted text-right">
+        <p className="hidden sm:block text-[0.65rem] tracking-[0.22em] uppercase font-condensed font-bold text-asf-muted text-end">
           Live on site
           <br />
           after saving

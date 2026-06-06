@@ -117,7 +117,7 @@ export function CreateTeamForm({ userId }: { userId: string }) {
             </span>
           </div>
           <div className="flex items-stretch h-10 rounded-md border border-asf-border bg-white">
-            <span className="inline-flex items-center px-3 text-asf-muted text-xs border-r border-asf-border">/teams/</span>
+            <span className="inline-flex items-center px-3 text-asf-muted text-xs border-e border-asf-border">/teams/</span>
             <input
               id="team_slug"
               required

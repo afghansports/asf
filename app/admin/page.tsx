@@ -90,7 +90,7 @@ export default async function AdminDashboardPage() {
               <li key={c.id} className="py-3 text-sm">
                 <a href="/admin/contacts" className="hover:text-asf-red">
                   <span className="font-medium text-asf-text">{c.name}</span>
-                  {!c.is_read ? <span className="ml-2 rounded bg-asf-red-light px-1.5 py-0.5 text-[0.65rem] text-asf-red">Unread</span> : null}
+                  {!c.is_read ? <span className="ms-2 rounded bg-asf-red-light px-1.5 py-0.5 text-[0.65rem] text-asf-red">Unread</span> : null}
                   <span className="block text-asf-muted">{c.subject}</span>
                   <span className="block text-xs text-asf-muted">{new Date(c.created_at).toLocaleDateString("en-US")}</span>
                 </a>

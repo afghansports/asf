@@ -29,7 +29,7 @@ export function ReelsFilterBar() {
   return (
     <div className="sticky top-16 z-20 bg-white/95 backdrop-blur border-b border-asf-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex flex-wrap items-center gap-3">
-        <span className="inline-flex items-center gap-1.5 text-asf-muted text-xs font-condensed font-bold tracking-[0.18em] uppercase mr-1">
+        <span className="inline-flex items-center gap-1.5 text-asf-muted text-xs font-condensed font-bold tracking-[0.18em] uppercase me-1">
           <Filter className="w-3.5 h-3.5" aria-hidden />
           Filters
         </span>
@@ -69,7 +69,7 @@ export function ReelsFilterBar() {
         </select>
         <Link
           href="/reels/upload"
-          className="ml-auto inline-flex items-center gap-2 h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.18em] uppercase hover:bg-asf-red-dark"
+          className="ms-auto inline-flex items-center gap-2 h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.18em] uppercase hover:bg-asf-red-dark"
         >
           <Upload className="w-3.5 h-3.5" aria-hidden />
           Upload reel

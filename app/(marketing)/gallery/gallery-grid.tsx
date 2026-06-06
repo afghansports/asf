@@ -82,7 +82,7 @@ export function GalleryGrid({ items }: Props) {
             <option key={n} value={n}>{n}</option>
           ))}
         </select>
-        <span className="text-xs text-asf-muted ml-auto">
+        <span className="text-xs text-asf-muted ms-auto">
           {visible.length} {visible.length === 1 ? "image" : "images"}
         </span>
       </div>
@@ -166,7 +166,7 @@ export function GalleryGrid({ items }: Props) {
                 type="button"
                 key={it.id}
                 onClick={() => setOpen(idx)}
-                className="block w-full mb-4 break-inside-avoid overflow-hidden rounded-lg border border-asf-border bg-asf-off text-left hover:ring-2 hover:ring-asf-red/30 transition"
+                className="block w-full mb-4 break-inside-avoid overflow-hidden rounded-lg border border-asf-border bg-asf-off text-start hover:ring-2 hover:ring-asf-red/30 transition"
               >
                 {it.image_url ? (
                   <div className="relative w-full h-64">

@@ -31,7 +31,7 @@ export function UserMenu({ username, fullName, avatarUrl, isAdmin = false }: Use
           <button
             type="button"
             aria-label="Open account menu"
-            className="inline-flex items-center gap-2 rounded-full p-1 pr-2 hover:bg-asf-off-2 transition-colors aria-expanded:bg-asf-off-2"
+            className="inline-flex items-center gap-2 rounded-full p-1 pe-2 hover:bg-asf-off-2 transition-colors aria-expanded:bg-asf-off-2"
           >
             <span className="relative inline-flex w-8 h-8 rounded-full bg-asf-navy text-white items-center justify-center font-condensed font-bold overflow-hidden">
               {avatarUrl ? (

@@ -80,7 +80,7 @@ export default async function FederationDetailPage({ params }: Props) {
                 Website
               </a>
             ) : null}
-            <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-asf-muted">
+            <span className="ms-auto inline-flex items-center gap-1.5 text-xs text-asf-muted">
               <Users className="w-3.5 h-3.5" />
               {fed.follower_count ?? 0} followers
             </span>

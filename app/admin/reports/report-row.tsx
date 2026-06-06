@@ -55,7 +55,7 @@ export function ReportRow({ report, previews }: Props) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex flex-wrap items-center gap-3 text-left"
+        className="w-full flex flex-wrap items-center gap-3 text-start"
       >
         <span
           className={cn(
@@ -71,7 +71,7 @@ export function ReportRow({ report, previews }: Props) {
         <code className="text-[0.7rem] text-asf-muted truncate max-w-[16rem]">
           {report.target_id}
         </code>
-        <span className="ml-auto text-xs text-asf-muted">
+        <span className="ms-auto text-xs text-asf-muted">
           last {new Date(report.last_reported_at).toLocaleDateString("en-US")}
         </span>
         <span className="text-xs text-asf-muted capitalize">{report.status}</span>
@@ -83,7 +83,7 @@ export function ReportRow({ report, previews }: Props) {
       </button>
 
       {open ? (
-        <div className="mt-3 pl-4 space-y-3 border-l-2 border-asf-border">
+        <div className="mt-3 ps-4 space-y-3 border-s-2 border-asf-border">
           {previews.length > 0 ? (
             <ul className="space-y-2">
               {previews.map((p, i) => (

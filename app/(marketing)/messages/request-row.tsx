@@ -66,7 +66,7 @@ export function MessageRequestRow({
         </div>
       </div>
       {request.preview_body ? (
-        <p className="text-sm text-asf-text/90 italic border-l-2 border-asf-border pl-3">
+        <p className="text-sm text-asf-text/90 italic border-s-2 border-asf-border ps-3">
           {request.preview_body}
         </p>
       ) : null}

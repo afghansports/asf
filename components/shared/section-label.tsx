@@ -14,7 +14,7 @@ export function SectionLabel({
   return (
     <span
       className={cn(
-        "inline-block pl-3 border-l-2 border-asf-red font-condensed font-bold text-xs tracking-[0.24em] uppercase text-asf-text",
+        "inline-block ps-3 border-s-2 border-asf-red font-condensed font-bold text-xs tracking-[0.24em] uppercase text-asf-text",
         className
       )}
     >

@@ -243,7 +243,7 @@ export default function AdminTutorialPage() {
           <Step>Sidebar → <Pill href="/admin/moderation">Moderation</Pill>. Search for the user.</Step>
           <Step>Issue a <strong>strike</strong>: open the user → click &ldquo;Add strike&rdquo; → write a short reason (visible to the user) → save. They receive a notification.</Step>
           <Step>Issue a <strong>suspension</strong>: choose tier:
-            <ul className="list-disc pl-5 mt-2 space-y-1">
+            <ul className="list-disc ps-5 mt-2 space-y-1">
               <li><strong>Read-only</strong>: can browse, cannot post or DM.</li>
               <li><strong>Write-restricted</strong>: cannot create teams or events.</li>
               <li><strong>Full</strong>: cannot use the platform at all.</li>
@@ -267,7 +267,7 @@ export default function AdminTutorialPage() {
           <Step>Each report shows the reporter, reported content, reason, and timestamp.</Step>
           <Step>Click <strong>View content</strong> to open it in a new tab. Click <strong>View reporter</strong> to check their report history.</Step>
           <Step>Decide:
-            <ul className="list-disc pl-5 mt-2 space-y-1">
+            <ul className="list-disc ps-5 mt-2 space-y-1">
               <li><strong>Dismiss</strong> — false alarm. Marks the report as resolved.</li>
               <li><strong>Remove content</strong> — hides the post / comment.</li>
               <li><strong>Escalate</strong> — opens the moderation flow against the author.</li>
@@ -447,11 +447,11 @@ function Lead({ children }: { children: React.ReactNode }) {
 }
 
 function Steps({ children }: { children: React.ReactNode }) {
-  return <ol className="list-decimal pl-5 space-y-2">{children}</ol>;
+  return <ol className="list-decimal ps-5 space-y-2">{children}</ol>;
 }
 
 function Step({ children }: { children: React.ReactNode }) {
-  return <li className="pl-1">{children}</li>;
+  return <li className="ps-1">{children}</li>;
 }
 
 function Code({ children }: { children: React.ReactNode }) {
@@ -494,7 +494,7 @@ function Warning({ children }: { children: React.ReactNode }) {
 function Example({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-3 rounded-md border border-asf-border bg-asf-off p-3 text-sm text-asf-text/90">
-      <span className="font-condensed font-bold tracking-wider uppercase text-[0.65rem] text-asf-muted mr-2">Example</span>
+      <span className="font-condensed font-bold tracking-wider uppercase text-[0.65rem] text-asf-muted me-2">Example</span>
       {children}
     </div>
   );
@@ -504,7 +504,7 @@ function Cheat({ title, children }: { title: string; children: React.ReactNode }
   return (
     <div className="rounded-md border border-asf-border bg-asf-off p-4">
       <p className="font-condensed font-bold text-[0.7rem] tracking-[0.18em] uppercase text-asf-red mb-2">{title}</p>
-      <ol className="list-decimal pl-5 space-y-1 text-sm text-asf-text/90">{children}</ol>
+      <ol className="list-decimal ps-5 space-y-1 text-sm text-asf-text/90">{children}</ol>
     </div>
   );
 }
