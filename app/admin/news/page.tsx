@@ -134,7 +134,7 @@ export default async function AdminNewsPage({
                       Edit
                     </Link>
                     <ActionButton
-                      action={() => deleteNewsPost(r.id)}
+                      action={deleteNewsPost.bind(null, r.id)}
                       label="Delete"
                       variant="danger"
                       confirm="Delete this news post?"

@@ -46,10 +46,12 @@ export function MobileDrawer({
   isAuthed,
   username,
   fullName,
+  isAdmin = false,
 }: {
   isAuthed: boolean;
   username: string | null;
   fullName: string | null;
+  isAdmin?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -178,16 +180,21 @@ export function MobileDrawer({
                     onNavigate={() => setOpen(false)}
                   />
                 ))}
-                {isAuthed
-                  ? AUTHED_EXTRA.map((l) => (
+                {isAuthed ? (
+                  <>
+                    {isAdmin ? (
+                      <DrawerItem href="/admin" label="Admin" onNavigate={() => setOpen(false)} />
+                    ) : null}
+                    {AUTHED_EXTRA.map((l) => (
                       <DrawerItem
                         key={l.href}
                         href={l.href}
                         label={l.label}
                         onNavigate={() => setOpen(false)}
                       />
-                    ))
-                  : null}
+                    ))}
+                  </>
+                ) : null}
               </ul>
             </nav>
 

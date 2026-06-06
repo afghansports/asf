@@ -128,7 +128,7 @@ export default async function AdminReelsPage({
                   </label>
                 </div>
                 <ActionButton
-                  action={() => deleteReel(r.id)}
+                  action={deleteReel.bind(null, r.id)}
                   label="Delete"
                   variant="danger"
                   confirm="Delete this reel? This cannot be undone."

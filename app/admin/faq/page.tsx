@@ -90,7 +90,7 @@ export default async function AdminFaqPage({
                       <Edit3 className="w-3 h-3" aria-hidden />
                       Edit
                     </Link>
-                    <ActionButton action={() => deleteFaqItem(r.id)} label="Delete" variant="danger" confirm="Delete this FAQ?" />
+                    <ActionButton action={deleteFaqItem.bind(null, r.id)} label="Delete" variant="danger" confirm="Delete this FAQ?" />
                   </div>
                 </td>
               </tr>

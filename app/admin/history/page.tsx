@@ -91,7 +91,7 @@ export default async function AdminHistoryPage({
                       <Edit3 className="w-3 h-3" aria-hidden />
                       Edit
                     </Link>
-                    <ActionButton action={() => deleteHistoryEntry(r.id)} label="Delete" variant="danger" confirm={`Delete ${r.year} ${r.title}?`} />
+                    <ActionButton action={deleteHistoryEntry.bind(null, r.id)} label="Delete" variant="danger" confirm={`Delete ${r.year} ${r.title}?`} />
                   </div>
                 </td>
               </tr>

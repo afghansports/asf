@@ -100,7 +100,7 @@ export default async function AdminSponsorsPage({
                       <Edit3 className="w-3 h-3" aria-hidden />
                       Edit
                     </Link>
-                    <ActionButton action={() => deleteSponsor(r.id)} label="Delete" variant="danger" confirm={`Delete sponsor "${r.name}"?`} />
+                    <ActionButton action={deleteSponsor.bind(null, r.id)} label="Delete" variant="danger" confirm={`Delete sponsor "${r.name}"?`} />
                   </div>
                 </td>
               </tr>

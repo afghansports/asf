@@ -45,11 +45,11 @@ export default async function AdminContactsPage() {
                     Reply by email
                   </a>
                   <ActionButton
-                    action={() => markContactRead(c.id, !c.is_read)}
+                    action={markContactRead.bind(null, c.id, !c.is_read)}
                     label={c.is_read ? "Mark unread" : "Mark read"}
                   />
                   <ActionButton
-                    action={() => deleteContactSubmission(c.id)}
+                    action={deleteContactSubmission.bind(null, c.id)}
                     label="Delete"
                     variant="danger"
                     confirm="Delete this contact submission?"

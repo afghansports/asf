@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, LayoutDashboard, LogOut, Settings, User as UserIcon, Users } from "lucide-react";
+import { ChevronDown, LayoutDashboard, LogOut, Settings, Shield, User as UserIcon, Users } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 /**
@@ -17,9 +17,10 @@ type UserMenuProps = {
   username: string | null;
   fullName: string | null;
   avatarUrl: string | null;
+  isAdmin?: boolean;
 };
 
-export function UserMenu({ username, fullName, avatarUrl }: UserMenuProps) {
+export function UserMenu({ username, fullName, avatarUrl, isAdmin = false }: UserMenuProps) {
   const initial = (fullName ?? username ?? "?").trim().charAt(0).toUpperCase() || "?";
   const profileHref = username ? `/profile/${username}` : "/profile/edit";
 
@@ -56,6 +57,9 @@ export function UserMenu({ username, fullName, avatarUrl }: UserMenuProps) {
           <MenuLink href={profileHref} icon={<UserIcon className="w-4 h-4" />} label="My Profile" />
           <MenuLink href="/teams/manage" icon={<Users className="w-4 h-4" />} label="My Team" />
           <MenuLink href="/dashboard" icon={<LayoutDashboard className="w-4 h-4" />} label="Dashboard" />
+          {isAdmin ? (
+            <MenuLink href="/admin" icon={<Shield className="w-4 h-4" />} label="Admin" />
+          ) : null}
           <MenuLink href="/profile/edit" icon={<Settings className="w-4 h-4" />} label="Settings" />
         </ul>
         <form action="/auth/signout" method="post" className="mt-1 pt-1 border-t border-asf-border">

@@ -202,7 +202,7 @@ export function ChaptersAdmin({ rows, userId }: { rows: ChapterRow[]; userId: st
                 </td>
                 <td className="px-4 py-3 text-right">
                   <ActionButton
-                    action={() => deleteChapter(r.id)}
+                    action={deleteChapter.bind(null, r.id)}
                     label="Delete"
                     variant="danger"
                     confirm={`Delete chapter "${r.name}"?`}

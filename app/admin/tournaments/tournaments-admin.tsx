@@ -206,7 +206,7 @@ export function TournamentsAdmin({ rows, userId }: { rows: TournamentRow[]; user
                 </td>
                 <td className="px-4 py-3 text-right">
                   <ActionButton
-                    action={() => deleteTournament(t.id)}
+                    action={deleteTournament.bind(null, t.id)}
                     label="Delete"
                     variant="danger"
                     confirm={`Delete tournament "${t.name}"?`}

@@ -134,10 +134,10 @@ export default async function AdminEventsPage({
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1.5">
                     {!e.is_published ? (
-                      <ActionButton action={() => approveEvent(e.id)} label="Approve" variant="ok" />
+                      <ActionButton action={approveEvent.bind(null, e.id)} label="Approve" variant="ok" />
                     ) : (
                       <ActionButton
-                        action={() => toggleEventFeatured(e.id, !e.is_featured)}
+                        action={toggleEventFeatured.bind(null, e.id, !e.is_featured)}
                         label={e.is_featured ? "Unfeature" : "Feature"}
                       />
                     )}
@@ -148,7 +148,7 @@ export default async function AdminEventsPage({
                       Edit
                     </Link>
                     <ActionButton
-                      action={() => rejectEvent(e.id)}
+                      action={rejectEvent.bind(null, e.id)}
                       label="Delete"
                       variant="danger"
                       confirm={`Delete event "${e.title}"? This cannot be undone.`}

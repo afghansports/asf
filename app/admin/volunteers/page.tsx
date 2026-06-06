@@ -138,7 +138,7 @@ export default async function AdminVolunteersPage({
                       Edit
                     </Link>
                     <ActionButton
-                      action={() => deleteTeamMember(r.id)}
+                      action={deleteTeamMember.bind(null, r.id)}
                       label="Delete"
                       variant="danger"
                       confirm={`Delete ${r.name}?`}

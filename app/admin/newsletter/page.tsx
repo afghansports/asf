@@ -51,7 +51,7 @@ export default async function AdminNewsletterPage() {
                   </td>
                   <td className="px-4 py-3">
                     <ActionButton
-                      action={() => deleteNewsletterSignup(r.id)}
+                      action={deleteNewsletterSignup.bind(null, r.id)}
                       label="Delete"
                       variant="danger"
                       confirm={`Delete subscriber ${r.email}?`}

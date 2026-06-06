@@ -63,13 +63,13 @@ export default async function AdminMatchesPage() {
                     </Link>
                     {m.status === "reported" || m.status === "disputed" ? (
                       <ActionButton
-                        action={() => adminConfirmMatch(m.id)}
+                        action={adminConfirmMatch.bind(null, m.id)}
                         label="Confirm"
                         variant="ok"
                       />
                     ) : null}
                     <ActionButton
-                      action={() => deleteMatch(m.id)}
+                      action={deleteMatch.bind(null, m.id)}
                       label="Delete"
                       variant="danger"
                       confirm="Delete this match?"
