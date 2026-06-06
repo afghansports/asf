@@ -86,14 +86,14 @@ export default async function AdminUsersPage({
                   <td className="px-4 py-3">
                     <AdminToggle
                       initial={!!u.is_admin}
-                      action={(next) => toggleUserAdmin(u.id, next)}
+                      action={toggleUserAdmin.bind(null, u.id)}
                       ariaLabel={`Toggle admin for ${u.username}`}
                     />
                   </td>
                   <td className="px-4 py-3">
                     <AdminToggle
                       initial={u.is_active ?? true}
-                      action={(next) => toggleUserActive(u.id, next)}
+                      action={toggleUserActive.bind(null, u.id)}
                       ariaLabel={`Toggle active for ${u.username}`}
                     />
                   </td>

@@ -113,7 +113,7 @@ export default async function AdminReelsPage({
                   <label className="inline-flex items-center gap-1.5">
                     <AdminToggle
                       initial={r.is_published}
-                      action={(v) => toggleReelPublished(r.id, v)}
+                      action={toggleReelPublished.bind(null, r.id)}
                       ariaLabel="Publish toggle"
                     />
                     <span>Pub</span>
@@ -121,7 +121,7 @@ export default async function AdminReelsPage({
                   <label className="inline-flex items-center gap-1.5">
                     <AdminToggle
                       initial={r.is_featured}
-                      action={(v) => toggleReelFeatured(r.id, v)}
+                      action={toggleReelFeatured.bind(null, r.id)}
                       ariaLabel="Feature toggle"
                     />
                     <span>Feat</span>

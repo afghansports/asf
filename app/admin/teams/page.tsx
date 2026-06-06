@@ -55,14 +55,14 @@ export default async function AdminTeamsPage() {
                 <td className="px-4 py-3">
                   <AdminToggle
                     initial={!!t.is_asf_affiliate}
-                    action={(next) => toggleTeamAffiliate(t.id, next)}
+                    action={toggleTeamAffiliate.bind(null, t.id)}
                     ariaLabel={`Toggle ASF affiliate for ${t.name}`}
                   />
                 </td>
                 <td className="px-4 py-3">
                   <AdminToggle
                     initial={t.is_active ?? true}
-                    action={(next) => toggleTeamActive(t.id, next)}
+                    action={toggleTeamActive.bind(null, t.id)}
                     ariaLabel={`Toggle active for ${t.name}`}
                   />
                 </td>

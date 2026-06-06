@@ -45,7 +45,7 @@ type NavItem = { href: string; icon: typeof LayoutDashboard; label: string };
 const CONTENT_NAV: NavItem[] = [
   { href: "/admin",              icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/tutorial",     icon: BookOpen,        label: "Tutorial" },
-  { href: "/admin/cms",          icon: FileEdit,        label: "CMS" },
+  { href: "/admin/cms",          icon: FileEdit,        label: "Edit Content" },
   { href: "/admin/gallery",      icon: ImageIcon,       label: "Gallery" },
   { href: "/admin/news",         icon: Newspaper,       label: "News" },
   { href: "/admin/reels",        icon: Video,           label: "Reels" },
