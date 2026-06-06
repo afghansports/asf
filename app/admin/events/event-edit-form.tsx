@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { saveAdminEvent } from "../_actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,16 +26,19 @@ type EventRow = {
   banner_url?: string | null;
 };
 
-export function EventEditForm({ event, userId }: { event: EventRow; userId: string }) {
-  const [title, setTitle] = useState(event.title);
-  const [eventType, setEventType] = useState(event.event_type);
-  const [sport, setSport] = useState<SportCode | "">((event.sport as SportCode) ?? "");
-  const [city, setCity] = useState(event.city ?? "");
-  const [state, setState] = useState(event.state_province ?? "");
-  const [startDatetime, setStartDatetime] = useState(event.start_datetime?.slice(0, 16) ?? "");
-  const [published, setPublished] = useState(!!event.is_published);
-  const [featured, setFeatured] = useState(!!event.is_featured);
-  const [bannerUrl, setBannerUrl] = useState<string | null>(event.banner_url ?? null);
+/** Handles both create (no `event`) and edit (with `event`). */
+export function EventEditForm({ event, userId }: { event?: EventRow; userId: string }) {
+  const router = useRouter();
+  const isNew = !event;
+  const [title, setTitle] = useState(event?.title ?? "");
+  const [eventType, setEventType] = useState(event?.event_type ?? "community");
+  const [sport, setSport] = useState<SportCode | "">((event?.sport as SportCode) ?? "");
+  const [city, setCity] = useState(event?.city ?? "");
+  const [state, setState] = useState(event?.state_province ?? "");
+  const [startDatetime, setStartDatetime] = useState(event?.start_datetime?.slice(0, 16) ?? "");
+  const [published, setPublished] = useState(isNew ? true : !!event?.is_published);
+  const [featured, setFeatured] = useState(!!event?.is_featured);
+  const [bannerUrl, setBannerUrl] = useState<string | null>(event?.banner_url ?? null);
   const [pending, start] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
 
@@ -42,7 +47,7 @@ export function EventEditForm({ event, userId }: { event: EventRow; userId: stri
     setMessage(null);
     start(async () => {
       const r = await saveAdminEvent({
-        id: event.id,
+        id: event?.id,
         title,
         eventType,
         sport: sport || null,
@@ -53,7 +58,14 @@ export function EventEditForm({ event, userId }: { event: EventRow; userId: stri
         isFeatured: featured,
         bannerUrl,
       });
-      setMessage(r.ok ? "Saved." : r.message);
+      if (r.ok) {
+        toast.success(isNew ? "Event created" : "Event saved");
+        if (isNew) router.push("/admin/events");
+        else setMessage("Saved.");
+      } else {
+        setMessage(r.message);
+        toast.error(r.message);
+      }
     });
   }
 
@@ -86,8 +98,8 @@ export function EventEditForm({ event, userId }: { event: EventRow; userId: stri
           <Input id="admin_event_city" value={city} onChange={(e) => setCity(e.target.value)} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="admin_event_start">Start</Label>
-          <Input id="admin_event_start" type="datetime-local" value={startDatetime} onChange={(e) => setStartDatetime(e.target.value)} />
+          <Label htmlFor="admin_event_start">Start{isNew ? "" : " (optional)"}</Label>
+          <Input id="admin_event_start" type="datetime-local" required={isNew} value={startDatetime} onChange={(e) => setStartDatetime(e.target.value)} />
         </div>
       </div>
       <div className="space-y-1.5">
@@ -106,7 +118,9 @@ export function EventEditForm({ event, userId }: { event: EventRow; userId: stri
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} /> Published</label>
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} /> Featured</label>
       </div>
-      <Button disabled={pending} className="bg-asf-red text-white hover:bg-asf-red-dark">{pending ? "Saving" : "Save event"}</Button>
+      <Button disabled={pending} className="bg-asf-red text-white hover:bg-asf-red-dark">
+        {pending ? "Saving" : isNew ? "Create event" : "Save event"}
+      </Button>
     </form>
   );
 }

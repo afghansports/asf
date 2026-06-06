@@ -4,10 +4,20 @@ import { ActionButton } from "../_action-button";
 import { adminConfirmMatch, deleteMatch } from "../_chapters-actions";
 import { ModuleToggle } from "../modules/module-toggle";
 import { isFeatureEnabled } from "@/lib/features/flags";
+import { MatchForm } from "./match-form";
 
 export const metadata = { title: "Admin matches" };
 
-export default async function AdminMatchesPage() {
+type SearchParams = { new?: string };
+
+export default async function AdminMatchesPage({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams> | SearchParams;
+}) {
+  const sp = (searchParams ? await searchParams : {}) as SearchParams;
+  const creating = !!sp.new;
+
   const supabase = await createClient();
   const { data: rows } = await supabase
     .from("matches")
@@ -25,6 +35,15 @@ export default async function AdminMatchesPage() {
     : { data: [] };
   const teamMap = new Map((teams ?? []).map((t) => [t.id, t.name]));
 
+  const { data: allTeams } = creating
+    ? await supabase
+        .from("teams")
+        .select("id, name, sport")
+        .eq("is_active", true)
+        .order("name", { ascending: true })
+        .limit(500)
+    : { data: [] };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
       <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
@@ -32,13 +51,33 @@ export default async function AdminMatchesPage() {
           <h1 className="font-display font-black text-3xl text-asf-text">Matches</h1>
           <p className="text-sm text-asf-muted mt-1">Reported matches auto-confirm 48h after submission. Confirm earlier or delete here.</p>
         </div>
-        <div className="flex items-center gap-2 pt-1">
-          <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
-            Show on site
-          </span>
-          <ModuleToggle flagKey="module.matches" initialEnabled={moduleEnabled} />
+        <div className="flex flex-wrap items-center gap-4 pt-1">
+          <Link
+            href="/admin/matches?new=1"
+            className="inline-flex items-center h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.16em] uppercase hover:bg-asf-red-dark"
+          >
+            + New match
+          </Link>
+          <div className="flex items-center gap-2">
+            <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
+              Show on site
+            </span>
+            <ModuleToggle flagKey="module.matches" initialEnabled={moduleEnabled} />
+          </div>
         </div>
       </div>
+
+      {creating ? (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display font-bold text-xl text-asf-text">New match</h2>
+            <Link href="/admin/matches" className="text-sm text-asf-muted hover:text-asf-red">
+              Cancel
+            </Link>
+          </div>
+          <MatchForm teams={allTeams ?? []} />
+        </div>
+      ) : null}
       <div className="rounded-lg border border-asf-border bg-white overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border text-left">

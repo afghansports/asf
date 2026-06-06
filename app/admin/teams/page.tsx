@@ -1,15 +1,31 @@
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AdminToggle } from "../_toggle";
 import { toggleTeamActive, toggleTeamAffiliate } from "../_actions";
 import { ModuleToggle } from "../modules/module-toggle";
 import { isFeatureEnabled } from "@/lib/features/flags";
+import { TeamForm } from "./team-form";
 
 export const metadata = { title: "Admin teams" };
 
-export default async function AdminTeamsPage() {
+type SearchParams = { new?: string };
+
+export default async function AdminTeamsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams> | SearchParams;
+}) {
+  const sp = (searchParams ? await searchParams : {}) as SearchParams;
+  const creating = !!sp.new;
+
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
   const { data: teams } = await supabase
     .from("teams")
     .select("id, name, slug, sport, city, state_province, member_count, is_asf_affiliate, is_active, logo_url")
@@ -22,13 +38,33 @@ export default async function AdminTeamsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-8 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="font-display font-black text-3xl text-asf-text">Teams</h1>
-        <div className="flex items-center gap-2">
-          <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
-            Show on site
-          </span>
-          <ModuleToggle flagKey="module.teams" initialEnabled={moduleEnabled} />
+        <div className="flex flex-wrap items-center gap-4">
+          <Link
+            href="/admin/teams?new=1"
+            className="inline-flex items-center h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.16em] uppercase hover:bg-asf-red-dark"
+          >
+            + New team
+          </Link>
+          <div className="flex items-center gap-2">
+            <span className="font-condensed font-bold text-[0.65rem] tracking-[0.22em] uppercase text-asf-muted">
+              Show on site
+            </span>
+            <ModuleToggle flagKey="module.teams" initialEnabled={moduleEnabled} />
+          </div>
         </div>
       </div>
+
+      {creating ? (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display font-bold text-xl text-asf-text">New team</h2>
+            <Link href="/admin/teams" className="text-sm text-asf-muted hover:text-asf-red">
+              Cancel
+            </Link>
+          </div>
+          <TeamForm userId={user.id} />
+        </div>
+      ) : null}
       <div className="overflow-x-auto rounded-lg border border-asf-border bg-white">
         <table className="w-full text-sm">
           <thead className="bg-asf-off border-b border-asf-border">

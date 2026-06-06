@@ -17,7 +17,7 @@ async function requireAdmin() {
     .eq("id", user.id)
     .maybeSingle();
   if (!profile?.is_admin) return { ok: false as const, message: "Admin access required." };
-  return { ok: true as const, supabase: createServiceClient() };
+  return { ok: true as const, supabase: createServiceClient(), userId: user.id };
 }
 
 function slugify(s: string): string {
@@ -153,6 +153,61 @@ export async function deleteTournament(id: string): Promise<AdminResult> {
 }
 
 /* ----------------------------- MATCHES (ADMIN) ----------------------------- */
+
+export async function createAdminMatch(input: {
+  sport: string;
+  homeTeamId: string;
+  awayTeamId: string;
+  status: string; // 'scheduled' | 'confirmed'
+  scheduledFor: string | null;
+  playedAt: string | null;
+  venue: string;
+  city: string;
+  state: string;
+  homeScore: number | null;
+  awayScore: number | null;
+  notes: string;
+}): Promise<AdminResult> {
+  const ctx = await requireAdmin();
+  if (!ctx.ok) return ctx;
+
+  if (!input.sport) return { ok: false, message: "Sport is required." };
+  if (!input.homeTeamId || !input.awayTeamId) return { ok: false, message: "Both teams are required." };
+  if (input.homeTeamId === input.awayTeamId)
+    return { ok: false, message: "Home and away must be different teams." };
+
+  const status = input.status === "confirmed" ? "confirmed" : "scheduled";
+  if (status === "confirmed" && (input.homeScore == null || input.awayScore == null)) {
+    return { ok: false, message: "Both scores are required to record a finished result." };
+  }
+
+  const payload: Record<string, unknown> = {
+    sport: input.sport,
+    home_team_id: input.homeTeamId,
+    away_team_id: input.awayTeamId,
+    status,
+    scheduled_for: input.scheduledFor || null,
+    venue: input.venue.trim() || null,
+    city: input.city.trim() || null,
+    state_province: input.state || null,
+    notes: input.notes.trim() || null,
+  };
+  if (status === "confirmed") {
+    payload.home_score = input.homeScore;
+    payload.away_score = input.awayScore;
+    payload.played_at = input.playedAt || new Date().toISOString();
+    payload.confirmed_by = ctx.userId;
+    payload.confirmed_at = new Date().toISOString();
+  } else {
+    payload.played_at = input.playedAt || null;
+  }
+
+  const { error } = await ctx.supabase.from("matches").insert(payload);
+  if (error) return { ok: false, message: error.message };
+  revalidatePath("/admin/matches");
+  revalidatePath("/matches");
+  return { ok: true };
+}
 
 export async function adminConfirmMatch(id: string): Promise<AdminResult> {
   const ctx = await requireAdmin();

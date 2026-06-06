@@ -9,7 +9,7 @@ import { isFeatureEnabled } from "@/lib/features/flags";
 
 export const metadata = { title: "Admin events" };
 
-type SearchParams = { filter?: string; edit?: string };
+type SearchParams = { filter?: string; edit?: string; new?: string };
 
 export default async function AdminEventsPage({
   searchParams,
@@ -19,6 +19,7 @@ export default async function AdminEventsPage({
   const sp = (searchParams ? await searchParams : {}) as SearchParams;
   const filter = sp.filter ?? "all";
   const editId = sp.edit;
+  const creating = !!sp.new && !editId;
 
   const supabase = await createClient();
   const {
@@ -52,6 +53,12 @@ export default async function AdminEventsPage({
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="font-display font-black text-3xl text-asf-text">Events</h1>
         <div className="flex flex-wrap items-center gap-4">
+          <Link
+            href="/admin/events?new=1"
+            className="inline-flex items-center h-9 px-4 rounded-md bg-asf-red text-white text-xs font-condensed font-bold tracking-[0.16em] uppercase hover:bg-asf-red-dark"
+          >
+            + New event
+          </Link>
           <div className="inline-flex rounded-md border border-asf-border bg-white overflow-hidden">
             {[
               { code: "all", label: "All" },
@@ -87,6 +94,18 @@ export default async function AdminEventsPage({
         <div className="mb-8">
           <h2 className="font-display font-bold text-xl text-asf-text mb-3">Edit event</h2>
           <EventEditForm event={editing} userId={user.id} />
+        </div>
+      ) : null}
+
+      {creating ? (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display font-bold text-xl text-asf-text">New event</h2>
+            <Link href="/admin/events" className="text-sm text-asf-muted hover:text-asf-red">
+              Cancel
+            </Link>
+          </div>
+          <EventEditForm userId={user.id} />
         </div>
       ) : null}
 

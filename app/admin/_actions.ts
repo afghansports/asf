@@ -25,6 +25,32 @@ async function requireAdmin() {
   return { ok: true as const, supabase: createServiceClient(), userId: user.id };
 }
 
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+}
+
+/** A slug unique within `table`, appending -2, -3, … on collision. */
+async function uniqueSlug(
+  supabase: ReturnType<typeof createServiceClient>,
+  table: "events" | "teams",
+  base: string
+): Promise<string> {
+  const root = base || "item";
+  let candidate = root;
+  for (let i = 2; i < 100; i++) {
+    const { data } = await supabase.from(table).select("id").eq("slug", candidate).maybeSingle();
+    if (!data) return candidate;
+    candidate = `${root}-${i}`.slice(0, 60);
+  }
+  return `${root}-${Date.now() % 100000}`.slice(0, 60);
+}
+
 /* -------------------------------- EVENTS -------------------------------- */
 
 export async function approveEvent(id: string): Promise<AdminResult> {
@@ -56,7 +82,7 @@ export async function toggleEventFeatured(id: string, value: boolean): Promise<A
 }
 
 export async function saveAdminEvent(input: {
-  id: string;
+  id?: string;
   title: string;
   eventType: string;
   sport: string | null;
@@ -80,8 +106,19 @@ export async function saveAdminEvent(input: {
     is_featured: input.isFeatured,
   };
   if (input.bannerUrl !== undefined) payload.banner_url = input.bannerUrl;
-  const { error } = await ctx.supabase.from("events").update(payload).eq("id", input.id);
-  if (error) return { ok: false, message: error.message };
+
+  if (input.id) {
+    const { error } = await ctx.supabase.from("events").update(payload).eq("id", input.id);
+    if (error) return { ok: false, message: error.message };
+  } else {
+    // Create. start_datetime is NOT NULL in the DB, so require it here.
+    if (!input.title.trim()) return { ok: false, message: "Title is required." };
+    if (!input.startDatetime) return { ok: false, message: "Start date and time is required." };
+    payload.slug = await uniqueSlug(ctx.supabase, "events", slugify(input.title));
+    payload.organizer_id = ctx.userId;
+    const { error } = await ctx.supabase.from("events").insert(payload);
+    if (error) return { ok: false, message: error.message };
+  }
   revalidatePath("/admin/events");
   revalidatePath("/events");
   return { ok: true };
@@ -298,6 +335,70 @@ export async function toggleTeamActive(teamId: string, value: boolean): Promise<
   if (!ctx.ok) return ctx;
   const { error } = await ctx.supabase.from("teams").update({ is_active: value }).eq("id", teamId);
   if (error) return { ok: false, message: error.message };
+  revalidatePath("/admin/teams");
+  revalidatePath("/teams");
+  return { ok: true };
+}
+
+export async function createAdminTeam(input: {
+  name: string;
+  captainUsername: string;
+  sport: string;
+  state: string;
+  city: string;
+  description: string;
+  foundedYear: number | null;
+  contactEmail: string;
+  contactPhone: string;
+  logoUrl: string | null;
+  isAffiliate: boolean;
+  isActive: boolean;
+}): Promise<AdminResult> {
+  const ctx = await requireAdmin();
+  if (!ctx.ok) return ctx;
+
+  const name = input.name.trim();
+  if (!name) return { ok: false, message: "Team name is required." };
+  if (!input.sport) return { ok: false, message: "Sport is required." };
+
+  // captain_id is NOT NULL and references a real profile — resolve the username.
+  const uname = input.captainUsername.trim().replace(/^@/, "").toLowerCase();
+  if (!uname) return { ok: false, message: "Captain @username is required." };
+  const { data: captain } = await ctx.supabase
+    .from("profiles")
+    .select("id")
+    .eq("username", uname)
+    .maybeSingle();
+  if (!captain) return { ok: false, message: `No user found with username @${uname}.` };
+
+  const { data: created, error } = await ctx.supabase
+    .from("teams")
+    .insert({
+      name,
+      slug: await uniqueSlug(ctx.supabase, "teams", slugify(name)),
+      sport: input.sport,
+      country_code: "US",
+      state_province: input.state || null,
+      city: input.city.trim() || null,
+      description: input.description.trim().slice(0, 500) || null,
+      logo_url: input.logoUrl,
+      captain_id: captain.id,
+      founded_year: input.foundedYear,
+      contact_email: input.contactEmail.trim() || null,
+      contact_phone: input.contactPhone.trim() || null,
+      is_asf_affiliate: input.isAffiliate,
+      is_active: input.isActive,
+    })
+    .select("id")
+    .single();
+  if (error || !created) return { ok: false, message: error?.message ?? "Could not create the team." };
+
+  // Captain membership row (fires the member_count trigger). Best-effort.
+  const { error: memberErr } = await ctx.supabase
+    .from("team_members")
+    .insert({ team_id: created.id, player_id: captain.id, role: "captain" });
+  if (memberErr) console.error("[admin/createAdminTeam] captain membership", memberErr);
+
   revalidatePath("/admin/teams");
   revalidatePath("/teams");
   return { ok: true };
