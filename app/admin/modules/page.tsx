@@ -12,6 +12,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   safety: "Trust & safety",
   monetization: "Monetization",
   integration: "Integrations",
+  homepage: "Homepage",
 };
 
 export default async function AdminModulesPage() {

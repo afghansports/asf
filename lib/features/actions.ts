@@ -30,6 +30,9 @@ export async function setFeatureFlag(key: string, enabled: boolean): Promise<Fla
     .eq("key", key);
   if (error) return { ok: false, message: error.message };
   revalidatePath("/admin/modules");
+  // Module visibility affects the nav (root layout) and gated public routes —
+  // revalidate the whole tree so a toggle takes effect site-wide immediately.
+  revalidatePath("/", "layout");
   return { ok: true };
 }
 
@@ -50,5 +53,6 @@ export async function resetFeatureFlag(key: string): Promise<FlagResult> {
     .eq("key", key);
   if (error) return { ok: false, message: error.message };
   revalidatePath("/admin/modules");
+  revalidatePath("/", "layout");
   return { ok: true };
 }
