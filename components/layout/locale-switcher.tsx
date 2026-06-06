@@ -54,6 +54,10 @@ export function LocaleSwitcher({
     setLocale(code);
     writeCookie(COOKIE, code);
     applyLocale(code);
+    // Reload so server components re-render in the new language AND any text the
+    // client auto-translator already swapped is reset — critical when switching
+    // back to English (otherwise the page stays Dari/Pashto + RTL until reload).
+    if (typeof window !== "undefined") window.location.reload();
   }
 
   const labelCls =

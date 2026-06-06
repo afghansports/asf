@@ -38,6 +38,17 @@ export function AutoTranslate() {
 
     const done = new WeakSet<Text>();
     const cache = new Map<string, string>();
+    const LS_KEY = `asf_tr_${locale}`;
+    // Warm the cache from localStorage so a returning reader sees instant
+    // translations with no API round-trip (the DB cache already avoids re-hitting
+    // Azure; this avoids even the fetch). Keyed by source text, so edited source
+    // simply misses and re-fetches.
+    try {
+      const saved = localStorage.getItem(LS_KEY);
+      if (saved) for (const [k, v] of Object.entries(JSON.parse(saved) as Record<string, string>)) cache.set(k, v);
+    } catch {
+      /* ignore corrupt/unavailable storage */
+    }
     let queue = new Set<Text>();
     let timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -81,6 +92,12 @@ export function AutoTranslate() {
           if (!res.ok) return;
           const data = (await res.json()) as { translations: string[] };
           need.forEach((t, i) => cache.set(t, data.translations?.[i] || t));
+          // Persist for next visit (cap entries so storage stays small).
+          try {
+            if (cache.size <= 3000) localStorage.setItem(LS_KEY, JSON.stringify(Object.fromEntries(cache)));
+          } catch {
+            /* storage full / unavailable — DB cache still covers us */
+          }
         } catch {
           return; // transient — a later mutation/scroll will retry
         }
