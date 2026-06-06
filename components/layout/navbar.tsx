@@ -7,6 +7,7 @@ import { UserMenu } from "./user-menu";
 import { MobileDrawer } from "./mobile-drawer";
 import { NotificationBell } from "./notification-bell";
 import { getFlags } from "@/lib/features/flags";
+import { NAV_FLAG_KEYS } from "@/lib/features/nav-config";
 
 /**
  * Public site Navbar. Server component — fetches the current user (if any)
@@ -42,20 +43,9 @@ export async function Navbar() {
 
   const isAuthed = !!user;
 
-  const flags = await getFlags([
-    "module.events",
-    "module.teams",
-    "module.reels",
-    "module.polls",
-    "module.gallery",
-    "module.news",
-    "module.dm",
-    "module.notifications",
-    "module.search",
-    "module.external_sports",
-    "module.wall",
-    "module.discussions",
-  ]);
+  // One resolved flag map drives both the desktop nav below and the mobile
+  // drawer — see lib/features/nav-config.ts for the shared link → flag map.
+  const flags = await getFlags(NAV_FLAG_KEYS);
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-asf-border">
@@ -73,6 +63,7 @@ export async function Navbar() {
           <NavLink href="/">Home</NavLink>
           {flags["module.wall"] ? <NavLink href="/feed">Wall</NavLink> : null}
           <AboutMenu />
+          <NavLink href="/about/team">Team</NavLink>
           {flags["module.events"] ? <NavLink href="/events">Events</NavLink> : null}
           {flags["module.teams"] ? <NavLink href="/teams">Teams</NavLink> : null}
           {flags["module.reels"] ? <NavLink href="/reels">Reels</NavLink> : null}
@@ -135,6 +126,7 @@ export async function Navbar() {
             username={profile?.username ?? null}
             fullName={profile?.full_name ?? null}
             isAdmin={profile?.is_admin ?? false}
+            flags={flags}
           />
         </div>
       </div>

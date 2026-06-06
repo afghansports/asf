@@ -4,6 +4,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
+import {
+  DRAWER_PRIMARY,
+  ABOUT_NAV,
+  DRAWER_AUTHED,
+  visibleLinks,
+} from "@/lib/features/nav-config";
 
 /**
  * MobileDrawer. Hamburger icon → full-height slide-in panel from the right
@@ -11,48 +17,27 @@ import { Logo } from "@/components/shared/logo";
  *
  * Decision: implemented directly (not via shadcn Dialog) so the panel can
  * slide from the right edge with native scroll lock and a simple animation.
+ *
+ * Links are filtered by `flags` so a module switched off in /admin/modules
+ * disappears here exactly as it does in the desktop navbar. The link → flag
+ * map lives in lib/features/nav-config.ts (shared with navbar + footer).
  */
-
-type DrawerLink = { href: string; label: string };
-const PUBLIC_LINKS: DrawerLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/events", label: "Events" },
-  { href: "/teams", label: "Teams" },
-  { href: "/tournaments", label: "Tournaments" },
-  { href: "/matches", label: "Matches" },
-  { href: "/chapters", label: "Chapters" },
-  { href: "/free-agents", label: "Free agents" },
-  { href: "/reels", label: "Reels" },
-  { href: "/polls", label: "Polls" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/news", label: "News" },
-  { href: "/leaderboards", label: "Leaderboards" },
-];
-const ABOUT_LINKS: DrawerLink[] = [
-  { href: "/about", label: "About ASF" },
-  { href: "/about/mission", label: "Mission and Vision" },
-  { href: "/about/history", label: "History" },
-  { href: "/about/team", label: "Management Team" },
-];
-const AUTHED_EXTRA: DrawerLink[] = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/messages", label: "Messages" },
-  { href: "/notifications", label: "Notifications" },
-  { href: "/saved", label: "Saved" },
-  { href: "/profile/edit", label: "Settings" },
-];
 
 export function MobileDrawer({
   isAuthed,
   username,
   fullName,
   isAdmin = false,
+  flags,
 }: {
   isAuthed: boolean;
   username: string | null;
   fullName: string | null;
   isAdmin?: boolean;
+  flags: Record<string, boolean>;
 }) {
+  const primary = visibleLinks(DRAWER_PRIMARY, flags);
+  const authedExtra = visibleLinks(DRAWER_AUTHED, flags);
   const [open, setOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
 
@@ -160,7 +145,7 @@ export function MobileDrawer({
                   </button>
                   {aboutOpen ? (
                     <ul className="pl-3 pb-1">
-                      {ABOUT_LINKS.map((l) => (
+                      {ABOUT_NAV.map((l) => (
                         <DrawerItem
                           key={l.href}
                           href={l.href}
@@ -172,7 +157,7 @@ export function MobileDrawer({
                     </ul>
                   ) : null}
                 </li>
-                {PUBLIC_LINKS.filter((l) => l.href !== "/").map((l) => (
+                {primary.filter((l) => l.href !== "/").map((l) => (
                   <DrawerItem
                     key={l.href}
                     href={l.href}
@@ -185,7 +170,7 @@ export function MobileDrawer({
                     {isAdmin ? (
                       <DrawerItem href="/admin" label="Admin" onNavigate={() => setOpen(false)} />
                     ) : null}
-                    {AUTHED_EXTRA.map((l) => (
+                    {authedExtra.map((l) => (
                       <DrawerItem
                         key={l.href}
                         href={l.href}

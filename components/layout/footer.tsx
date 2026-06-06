@@ -6,6 +6,12 @@ import { CookieSettingsLink } from "./cookie-settings-link";
 import { LocaleSwitcher } from "./locale-switcher";
 import { ThemeToggle } from "./theme-toggle";
 import { getContentBatch } from "@/lib/cms/site-content";
+import { getFlags } from "@/lib/features/flags";
+import {
+  FOOTER_QUICK_LINKS,
+  NAV_FLAG_KEYS,
+  visibleLinks,
+} from "@/lib/features/nav-config";
 
 /**
  * Site Footer. Per ASF_LAUNCH_PRD.md > STEP 4 > Footer.
@@ -16,26 +22,11 @@ import { getContentBatch } from "@/lib/cms/site-content";
  *   3. Sports
  *   4. Connect + Newsletter
  * Bottom row: copyright, Privacy, Terms, Cookie Settings.
+ *
+ * Quick Links and the Sports column are filtered by module flags so a module
+ * switched off in /admin/modules drops out of the footer too. The link → flag
+ * map is shared with the navbar + mobile drawer (lib/features/nav-config.ts).
  */
-
-const QUICK_LINKS = [
-  { href: "/about", label: "About ASF" },
-  { href: "/about/history", label: "History" },
-  { href: "/about/team", label: "Team" },
-  { href: "/events", label: "Events" },
-  { href: "/teams", label: "Teams" },
-  { href: "/tournaments", label: "Tournaments" },
-  { href: "/matches", label: "Matches" },
-  { href: "/chapters", label: "Chapters" },
-  { href: "/free-agents", label: "Free agents" },
-  { href: "/reels", label: "Reels" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/news", label: "News" },
-  { href: "/sponsors", label: "Sponsors" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/contact", label: "Contact" },
-  { href: "/community-guidelines", label: "Community Guidelines" },
-];
 
 const SPORTS_LINKS = [
   { href: "/teams?sport=soccer", label: "Soccer" },
@@ -53,6 +44,12 @@ export async function Footer() {
     contact_email: "agdcvakbl@gmail.com",
     contact_facebook: "https://www.facebook.com/AfghanSportsFederation",
   });
+
+  const flags = await getFlags(NAV_FLAG_KEYS);
+  const quickLinks = visibleLinks(FOOTER_QUICK_LINKS, flags);
+  // The Sports column links into /teams?sport=… — only meaningful when the
+  // Teams module is on.
+  const showSports = flags["module.teams"] !== false;
 
   return (
     <footer className="bg-asf-navy text-white mt-24">
@@ -76,7 +73,7 @@ export async function Footer() {
         <div className="md:col-span-2">
           <FooterHeading>Quick Links</FooterHeading>
           <ul className="mt-4 space-y-2">
-            {QUICK_LINKS.map((l) => (
+            {quickLinks.map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="text-sm text-white/75 hover:text-white">
                   {l.label}
@@ -87,18 +84,20 @@ export async function Footer() {
         </div>
 
         {/* Sports */}
-        <div className="md:col-span-2">
-          <FooterHeading>Sports</FooterHeading>
-          <ul className="mt-4 space-y-2">
-            {SPORTS_LINKS.map((l) => (
-              <li key={l.href}>
-                <Link href={l.href} className="text-sm text-white/75 hover:text-white">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {showSports ? (
+          <div className="md:col-span-2">
+            <FooterHeading>Sports</FooterHeading>
+            <ul className="mt-4 space-y-2">
+              {SPORTS_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="text-sm text-white/75 hover:text-white">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         {/* Connect + Newsletter */}
         <div className="md:col-span-4 space-y-6">
