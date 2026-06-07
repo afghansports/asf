@@ -35,8 +35,8 @@ export default function PrivacyPage() {
               <p>
                 Afghan Sports Federation is a non-profit community organization. The data
                 controller is the ASF Board, contactable at{" "}
-                <a href="mailto:privacy@asf.org" className="text-asf-red underline underline-offset-4">
-                  privacy@asf.org
+                <a href="mailto:privacy@afghansportsfederation.com" className="text-asf-red underline underline-offset-4">
+                  privacy@afghansportsfederation.com
                 </a>
                 . The platform is operated from Northern Virginia, USA.
               </p>
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
                 <li>Access and download all your data from <em>Profile &gt; Edit profile &gt; Data export</em>.</li>
                 <li>Correct inaccurate information directly in your profile settings.</li>
                 <li>Delete your account from <em>Profile &gt; Edit profile &gt; Delete account</em>. Deletion is soft for 90 days, then permanent.</li>
-                <li>Restrict processing or object to specific uses by emailing privacy@asf.org.</li>
+                <li>Restrict processing or object to specific uses by emailing privacy@afghansportsfederation.com.</li>
                 <li>Withdraw consent for marketing emails or web push at any time.</li>
                 <li>Lodge a complaint with your local data protection authority.</li>
               </ul>
@@ -125,7 +125,7 @@ export default function PrivacyPage() {
                 The platform is not intended for children under 13. Members aged 13 to 15 must
                 provide a parent or guardian email at signup; we email the guardian a consent link
                 that must be confirmed before the account becomes active. Guardians can revoke
-                consent at any time by emailing safeguarding@asf.org and the account will be
+                consent at any time by emailing safeguarding@afghansportsfederation.com and the account will be
                 deactivated immediately.
               </p>
               <p>
@@ -180,13 +180,13 @@ export default function PrivacyPage() {
               <h2 className="font-display font-bold text-2xl text-asf-text">Contact</h2>
               <p>
                 Privacy questions:{" "}
-                <a href="mailto:privacy@asf.org" className="text-asf-red underline underline-offset-4">privacy@asf.org</a>
+                <a href="mailto:privacy@afghansportsfederation.com" className="text-asf-red underline underline-offset-4">privacy@afghansportsfederation.com</a>
                 <br />
                 Safeguarding:{" "}
-                <a href="mailto:safeguarding@asf.org" className="text-asf-red underline underline-offset-4">safeguarding@asf.org</a>
+                <a href="mailto:safeguarding@afghansportsfederation.com" className="text-asf-red underline underline-offset-4">safeguarding@afghansportsfederation.com</a>
                 <br />
                 Data protection requests:{" "}
-                <a href="mailto:dpo@asf.org" className="text-asf-red underline underline-offset-4">dpo@asf.org</a>
+                <a href="mailto:dpo@afghansportsfederation.com" className="text-asf-red underline underline-offset-4">dpo@afghansportsfederation.com</a>
               </p>
             </section>
           </article>

@@ -386,7 +386,7 @@ export default function AdminTutorialPage() {
 
       <p className="text-xs text-asf-muted text-center">
         Last updated: 2026 · Questions or things to add? Email{" "}
-        <a href="mailto:dev@asf.org" className="text-asf-red underline underline-offset-4">dev@asf.org</a>
+        <a href="mailto:dev@afghansportsfederation.com" className="text-asf-red underline underline-offset-4">dev@afghansportsfederation.com</a>
       </p>
     </section>
   );

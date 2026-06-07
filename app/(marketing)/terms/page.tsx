@@ -40,7 +40,7 @@ export default function TermsPage() {
               <h2 className="font-display font-bold text-2xl text-asf-text">3. Your account</h2>
               <p>
                 You are responsible for any activity on your account. Keep your password secure
-                and notify us immediately at security@asf.org if you suspect unauthorized access.
+                and notify us immediately at security@afghansportsfederation.com if you suspect unauthorized access.
                 We strongly recommend enabling two-factor authentication from your profile settings.
               </p>
             </section>
@@ -94,7 +94,7 @@ export default function TermsPage() {
               </ul>
               <p>
                 You can appeal any moderation action from your suspension page or by emailing
-                appeals@asf.org. Appeals are reviewed by a moderator who was not involved in the
+                appeals@afghansportsfederation.com. Appeals are reviewed by a moderator who was not involved in the
                 original decision.
               </p>
             </section>
@@ -207,13 +207,13 @@ export default function TermsPage() {
               <h2 className="font-display font-bold text-2xl text-asf-text">17. Contact</h2>
               <p>
                 General:{" "}
-                <a href="mailto:hello@asf.org" className="text-asf-red underline underline-offset-4">hello@asf.org</a>
+                <a href="mailto:hello@afghansportsfederation.com" className="text-asf-red underline underline-offset-4">hello@afghansportsfederation.com</a>
                 <br />
                 Legal:{" "}
-                <a href="mailto:legal@asf.org" className="text-asf-red underline underline-offset-4">legal@asf.org</a>
+                <a href="mailto:legal@afghansportsfederation.com" className="text-asf-red underline underline-offset-4">legal@afghansportsfederation.com</a>
                 <br />
                 Appeals:{" "}
-                <a href="mailto:appeals@asf.org" className="text-asf-red underline underline-offset-4">appeals@asf.org</a>
+                <a href="mailto:appeals@afghansportsfederation.com" className="text-asf-red underline underline-offset-4">appeals@afghansportsfederation.com</a>
               </p>
             </section>
           </article>
