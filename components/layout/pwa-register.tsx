@@ -18,14 +18,12 @@ export function PwaRegister() {
   const [cookieReady, setCookieReady] = useState(false);
 
   useEffect(() => {
-    if (!("serviceWorker" in navigator)) return;
-    const onLoad = () => {
+    if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register("/sw.js", { scope: "/" })
-        .catch((e) => console.warn("[pwa] register failed", e));
-    };
-    if (document.readyState === "complete") onLoad();
-    else window.addEventListener("load", onLoad, { once: true });
+        .getRegistrations()
+        .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
+        .catch((e) => console.warn("[pwa] unregister failed", e));
+    }
 
     const onInstall = (e: Event) => {
       e.preventDefault();
