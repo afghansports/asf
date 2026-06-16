@@ -23,7 +23,11 @@ export function ForgotPasswordForm() {
 
     const supabase = createClient();
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      // Route through /auth/callback so the PKCE recovery code is exchanged for a
+      // session server-side, then forwarded to /reset-password (which needs that
+      // session to call updateUser). Going straight to /reset-password leaves no
+      // session and the update fails.
+      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
     });
 
     if (resetError) {

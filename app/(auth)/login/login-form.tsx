@@ -18,6 +18,11 @@ export function LoginForm() {
   const params = useSearchParams();
   const errorParam = params.get("error");
   const next = params.get("next") ?? "/dashboard";
+  // Only offer Google sign-in when it's actually configured in Supabase Auth.
+  // Set NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED=true (and configure the Google provider
+  // in Supabase) to show it. Hidden by default so users aren't redirected to a
+  // raw "provider is not enabled" error page.
+  const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED === "true";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -98,16 +103,20 @@ export function LoginForm() {
         {submitting ? <LoadingSpinner size="sm" inline className="text-white" /> : "Sign in"}
       </Button>
 
-      <div className="relative my-2">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-asf-border" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-asf-muted">Or continue with</span>
-        </div>
-      </div>
+      {googleEnabled && (
+        <>
+          <div className="relative my-2">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-asf-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-asf-muted">Or continue with</span>
+            </div>
+          </div>
 
-      <GoogleOAuthButton next={next} />
+          <GoogleOAuthButton next={next} />
+        </>
+      )}
 
       <p className="text-center text-sm text-asf-muted">
         Don&apos;t have an account?{" "}
