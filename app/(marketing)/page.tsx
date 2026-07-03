@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { HeroVideoCarousel } from "@/components/feature/hero-video-carousel";
 import { AfghanCupBanner } from "@/components/feature/afghan-cup-banner";
+import { July4Tournament } from "@/components/feature/july4-tournament";
 import { StatsBar } from "@/components/feature/stats-bar";
 import { AboutTeaser } from "@/components/feature/about-teaser";
 import { SportsGrid } from "@/components/feature/sports-grid";
@@ -59,6 +60,8 @@ export default async function HomePage() {
         />
       ) : null}
       {f["home.afghan_cup"] ? <AfghanCupBanner /> : null}
+      {/* Seasonal July 4th 2026 ABF tournament promo — remove after the event. */}
+      <July4Tournament />
       {f["home.stats"] ? <StatsBar /> : null}
       {f["home.about"] ? <AboutTeaser /> : null}
       {f["home.sports"] ? <SportsGrid /> : null}
